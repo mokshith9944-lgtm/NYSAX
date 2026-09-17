@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -127,6 +128,9 @@ const MainApp: React.FC = () => {
         isOpen={auditModalOpen}
         onClose={() => setAuditModalOpen(false)}
       />
+      
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   );
 };
