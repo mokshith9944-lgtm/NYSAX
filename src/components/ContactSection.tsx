@@ -7,7 +7,8 @@ import {
   MessageSquare, 
   Calendar, 
   Clock, 
-  ShieldCheck 
+  ShieldCheck,
+  ArrowRight
 } from 'lucide-react';
 import { InstagramIcon } from './icons/InstagramIcon';
 import confetti from 'canvas-confetti';
@@ -35,7 +36,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
     setLoading(true);
 
     setTimeout(() => {
-      // Save to database
       db.saveLead({
         name: formData.name,
         email: formData.email,
@@ -50,16 +50,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
       setLoading(false);
       setSubmitted(true);
 
-      // Trigger celebration confetti
       try {
         confetti({
-          particleCount: 100,
+          particleCount: 90,
           spread: 70,
           origin: { y: 0.6 }
         });
-      } catch (err) {
-        // Fallback gracefully
-      }
+      } catch (err) {}
     }, 600);
   };
 
@@ -72,36 +69,36 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
   };
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden bg-[#060911]">
+    <section id="contact" className="py-24 relative overflow-hidden bg-[#070C18]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column - Agency Direct Contact Info */}
+          {/* Left Column - NexStudio Agency Contact Details */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold uppercase tracking-wider">
-              <MessageSquare className="w-3.5 h-3.5 text-purple-400" />
-              <span>Direct Communication</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/10 border border-primary/30 text-blue-300 text-xs font-semibold uppercase tracking-wider">
+              <MessageSquare className="w-3.5 h-3.5 text-primary" />
+              <span>Get in Touch</span>
             </div>
 
             <h2 className="text-3xl sm:text-5xl font-display font-black text-white tracking-tight">
-              Ready to Accelerate Your Growth?
+              Ready to Accelerate Your Brand?
             </h2>
 
             <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-              Fill out the inquiry form or connect directly with our strategic team. We review all submissions within 4 business hours and deliver a personalized gameplan.
+              Submit your project details or connect directly with our strategic leads. We evaluate all inquiries within 4 business hours and prepare an actionable revenue roadmap.
             </p>
 
             <div className="space-y-4 pt-2">
-              {/* Email Card */}
+              {/* Direct Email Card */}
               <a
                 href="mailto:nysaxofficial@gmail.com"
-                className="flex items-center gap-4 p-4 rounded-2xl bg-[#0E1322] border border-white/10 hover:border-purple-500/40 hover:bg-[#111728] transition-all group"
+                className="flex items-center gap-4 p-4 rounded-2xl bg-[#0D1527] border border-white/10 hover:border-primary/40 transition-all group"
               >
-                <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400 font-medium">Direct Email Contact</p>
-                  <p className="text-sm font-semibold text-white group-hover:text-purple-300 transition-colors">
+                  <p className="text-xs text-slate-400 font-medium">Direct Inquiries</p>
+                  <p className="text-sm font-semibold text-white group-hover:text-primary transition-colors">
                     nysaxofficial@gmail.com
                   </p>
                 </div>
@@ -112,7 +109,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
                 href="https://www.instagram.com/nysax.agency?stkn=MXdycDVzN3lqc2tqZA=="
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 p-4 rounded-2xl bg-[#0E1322] border border-white/10 hover:border-pink-500/40 hover:bg-[#111728] transition-all group"
+                className="flex items-center gap-4 p-4 rounded-2xl bg-[#0D1527] border border-white/10 hover:border-pink-500/40 transition-all group"
               >
                 <div className="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 group-hover:scale-110 transition-transform">
                   <InstagramIcon className="w-5 h-5" />
@@ -126,10 +123,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
               </a>
 
               {/* Book Call Banner */}
-              <div className="p-5 rounded-2xl bg-gradient-to-r from-purple-900/40 to-cyan-900/40 border border-purple-500/30 space-y-2.5">
+              <div className="p-5 rounded-2xl bg-[#0D1527] border border-primary/30 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider">
-                    <Calendar className="w-4 h-4 text-cyan-400" />
+                    <Calendar className="w-4 h-4 text-primary" />
                     <span>Prefer Real-Time Discussion?</span>
                   </div>
                   <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
@@ -137,11 +134,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
                   </span>
                 </div>
                 <p className="text-xs text-slate-300">
-                  Book a 30-minute private video call directly on our team calendar.
+                  Book a private 30-minute video strategy call directly on our team calendar.
                 </p>
                 <button
                   onClick={onOpenBooking}
-                  className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/10 transition-colors"
+                  className="w-full py-2.5 rounded-xl bg-primary/20 hover:bg-primary text-blue-200 hover:text-white font-semibold text-xs border border-primary/40 transition-all"
                 >
                   Open Booking Calendar
                 </button>
@@ -149,9 +146,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
             </div>
           </div>
 
-          {/* Right Column - Submission Form */}
+          {/* Right Column - NexStudio Submission Form */}
           <div className="lg:col-span-7">
-            <div className="p-7 sm:p-9 rounded-3xl bg-[#0D1220]/90 border border-white/10 backdrop-blur-2xl shadow-2xl relative">
+            <div className="p-7 sm:p-9 rounded-3xl bg-[#0D1527] border border-white/10 backdrop-blur-2xl shadow-2xl relative">
               {submitted ? (
                 <div className="text-center py-10 space-y-5 animate-in fade-in zoom-in-95">
                   <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400">
@@ -161,13 +158,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
                     Inquiry Received, {formData.name}!
                   </h3>
                   <p className="text-slate-300 text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
-                    Your inquiry has been stored directly in the NYSAX Admin CRM. A senior growth strategist is already reviewing your details and will follow up shortly at <span className="text-white font-medium">{formData.email}</span>.
+                    Your brief has been logged in the NYSAX CRM. Our senior growth strategist is already reviewing your details and will follow up shortly at <span className="text-white font-medium">{formData.email}</span>.
                   </p>
 
                   <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
                     <button
                       onClick={handleOpenEmail}
-                      className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-purple-600/30"
+                      className="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-primary/30"
                     >
                       <Mail className="w-4 h-4" />
                       Send Copy Via Email Client
@@ -197,7 +194,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
                         placeholder="John Doe"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-purple-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#090E20] border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-primary"
                       />
                     </div>
 
@@ -211,7 +208,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
                         placeholder="john@company.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-purple-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#090E20] border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-primary"
                       />
                     </div>
                   </div>
@@ -226,7 +223,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
                         placeholder="example.com or @handle"
                         value={formData.websiteOrHandle}
                         onChange={(e) => setFormData({ ...formData, websiteOrHandle: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-purple-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#090E20] border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-primary"
                       />
                     </div>
 
@@ -237,13 +234,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
                       <select
                         value={formData.service}
                         onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                        className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs focus:outline-none focus:border-purple-500"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#090E20] border border-white/10 text-white text-xs focus:outline-none focus:border-primary"
                       >
-                        <option value="SEO Optimization">SEO Optimization & Rankings</option>
-                        <option value="Website Design">Website Design & Funnels</option>
-                        <option value="Sales Strategy">Sales Strategy & Pipeline</option>
-                        <option value="Email Marketing">Email Marketing & Retention</option>
-                        <option value="Newbies in Social Media Marketing">Newbies in Social Media Marketing</option>
+                        <option value="SEO Optimization">01. SEO Optimization & Rankings</option>
+                        <option value="Website Design">02. Website Design & Funnels</option>
+                        <option value="Sales Strategy">03. Sales Strategy & Pipeline</option>
+                        <option value="Email Marketing">04. Email Marketing & Retention</option>
+                        <option value="Newbies in Social Media Marketing">05. Newbies in Social Media Marketing</option>
                         <option value="Multi-Service Growth Retainer">Full Multi-Service Retainer</option>
                       </select>
                     </div>
@@ -261,8 +258,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
                           onClick={() => setFormData({ ...formData, budget: tier })}
                           className={`py-2 px-2 text-center rounded-xl text-xs font-medium border transition-all ${
                             formData.budget === tier
-                              ? 'bg-purple-600/30 border-purple-500 text-white'
-                              : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:text-white'
+                              ? 'bg-primary/20 border-primary text-white font-semibold'
+                              : 'bg-[#090E20] border-white/10 text-slate-400 hover:text-white'
                           }`}
                         >
                           {tier}
@@ -273,30 +270,30 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
 
                   <div>
                     <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                      Project Details & Current Bottleneck
+                      Project Details & Goals
                     </label>
                     <textarea
                       rows={3}
-                      placeholder="Tell us what you want to achieve, current revenue, or what challenges you are facing..."
+                      placeholder="Tell us what you want to achieve, your timeline, or current bottlenecks..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-purple-500 resize-none"
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#090E20] border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-primary resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold text-xs shadow-lg shadow-purple-600/30 transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+                    className="w-full py-3.5 px-6 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95"
                   >
                     {loading ? (
                       <span className="flex items-center gap-2">
                         <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                        Saving to Database...
+                        Logging Brief in CRM...
                       </span>
                     ) : (
                       <>
-                        <Send className="w-4 h-4 text-cyan-200 group-hover:translate-x-0.5 transition-transform" />
+                        <Send className="w-4 h-4" />
                         <span>Submit Project Brief to NYSAX</span>
                       </>
                     )}
@@ -309,7 +306,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
                     </span>
                     <span>•</span>
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-purple-400" />
+                      <Clock className="w-3.5 h-3.5 text-primary" />
                       Response Within 4 Hours
                     </span>
                   </div>

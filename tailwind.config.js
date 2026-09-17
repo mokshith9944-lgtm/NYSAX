@@ -7,19 +7,35 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#06080F',
+        background: '#070C18',
+        'dark-bg': '#090E20',
+        'dark-card': '#0D1527',
+        'dark-border': 'rgba(255, 255, 255, 0.08)',
+        primary: {
+          DEFAULT: '#3758F9',
+          hover: '#2945D8',
+          light: '#EAEFFF',
+          dark: '#1B31A8'
+        },
+        accent: {
+          cyan: '#06B6D4',
+          purple: '#8B5CF6',
+          amber: '#F59E0B',
+          emerald: '#10B981'
+        },
         surface: {
-          50: '#151b2b',
-          100: '#111622',
-          200: '#0d111a',
-          300: '#090d15',
+          50: '#151F36',
+          100: '#0F172A',
+          200: '#0B1120',
+          300: '#070C18',
         },
         brand: {
+          blue: '#3758F9',
           purple: '#8B5CF6',
           violet: '#7C3AED',
           cyan: '#06B6D4',
           accent: '#EC4899',
-          glow: '#A855F7'
+          glow: '#3758F9'
         }
       },
       fontFamily: {
