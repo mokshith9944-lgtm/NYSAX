@@ -1,6 +1,6 @@
-import React from 'react';
 import { Mail, ArrowUpRight, Lock, Sparkles, CheckCircle2 } from 'lucide-react';
 import { InstagramIcon } from './icons/InstagramIcon';
+import { Logo } from './brand/Logo';
 import { useAuth } from '../context/AuthContext';
 
 interface FooterProps {
@@ -24,14 +24,7 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center font-display font-black text-base text-white shadow-md shadow-primary/30">
-                N
-              </div>
-              <span className="font-display font-black text-lg text-white tracking-wider">
-                NYSAX <span className="text-[10px] text-primary uppercase font-bold ml-1">Studio</span>
-              </span>
-            </div>
+            <Logo size="md" subtext="Growth & Performance Studio" />
 
             <p className="text-slate-300 leading-relaxed max-w-sm">
               NYSAX is a premier digital growth studio engineering exponential revenue through SEO dominance, conversion web design, sales architecture, email flows, and social media incubation.

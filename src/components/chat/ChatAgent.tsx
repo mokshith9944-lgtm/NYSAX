@@ -464,7 +464,9 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ onOpenBooking, onOpenAudit
           className="relative group p-4 rounded-full bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 text-white shadow-2xl shadow-purple-600/40 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center"
           title="Chat with NYSAX Rule-Based Growth Advisor"
         >
-          <Bot className="w-7 h-7 animate-pulse-slow" />
+          <div className="w-8 h-8 rounded-full overflow-hidden p-0.5 bg-black flex items-center justify-center">
+            <img src="/nysax-logo.png" alt="NYSAX Logo" className="w-full h-full object-cover rounded-full" />
+          </div>
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-500 text-white text-[10px] font-extrabold flex items-center justify-center border-2 border-[#06080F]">
               {unreadCount}
@@ -481,10 +483,10 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ onOpenBooking, onOpenAudit
           <div className="p-4 bg-gradient-to-r from-purple-950/60 via-slate-900 to-cyan-950/60 border-b border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300">
-                  <Bot className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-xl overflow-hidden border border-white/20 bg-black flex items-center justify-center p-0.5">
+                  <img src="/nysax-logo.png" alt="NYSAX Logo" className="w-full h-full object-cover rounded-[10px]" />
                 </div>
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#0B0F1B]"></span>
+                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#0B0F1B]"></span>
               </div>
               <div>
                 <div className="flex items-center gap-1.5">

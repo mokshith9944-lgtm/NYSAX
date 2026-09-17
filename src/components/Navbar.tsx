@@ -12,6 +12,7 @@ import {
   LogOut,
   ChevronDown
 } from 'lucide-react';
+import { Logo } from './brand/Logo';
 import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
@@ -78,26 +79,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Logo - NexStudio Style */}
           <button
             onClick={() => setCurrentView('home')}
-            className="flex items-center gap-3 text-left group"
+            className="text-left group"
           >
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center p-0.5 shadow-md shadow-primary/30 group-hover:scale-105 transition-all">
-              <span className="font-display font-black text-lg text-white tracking-wider">
-                N
-              </span>
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-display font-extrabold text-xl tracking-tight text-white group-hover:text-primary transition-colors">
-                  NYSAX
-                </span>
-                <span className="px-1.5 py-0.5 text-[9px] uppercase font-bold tracking-widest rounded bg-primary/15 text-blue-300 border border-primary/30">
-                  Studio
-                </span>
-              </div>
-              <p className="text-[10px] tracking-wider text-slate-400 uppercase -mt-0.5 font-medium">
-                Growth & Digital Agency
-              </p>
-            </div>
+            <Logo size="md" subtext="Growth & Digital Studio" />
           </button>
 
           {/* Desktop Navigation Links */}

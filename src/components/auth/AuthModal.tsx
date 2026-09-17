@@ -108,10 +108,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-cyan-500 p-0.5 mx-auto mb-3 shadow-lg shadow-purple-500/20">
-            <div className="w-full h-full bg-[#0C101C] rounded-[14px] flex items-center justify-center">
-              <span className="font-display font-black text-xl text-purple-400">N</span>
-            </div>
+          <div className="w-14 h-14 rounded-2xl overflow-hidden border border-white/20 p-0.5 mx-auto mb-3 shadow-xl shadow-black/60 bg-black flex items-center justify-center">
+            <img src="/nysax-logo.png" alt="NYSAX Logo" className="w-full h-full object-cover rounded-[14px]" />
           </div>
           <h3 className="text-2xl font-display font-bold text-white tracking-tight">
             {mode === 'login' ? 'Welcome Back to NYSAX' : 'Create Your NYSAX Account'}
