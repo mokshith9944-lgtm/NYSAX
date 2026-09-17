@@ -10,6 +10,7 @@
     "postinstall": "node -e \"try { const fs=require('fs'); if(fs.existsSync('./node_modules/@rollup/wasm-node')) { fs.cpSync('./node_modules/@rollup/wasm-node/dist/wasm-node', './node_modules/rollup/dist/wasm-node', {recursive:true}); fs.copyFileSync('./node_modules/@rollup/wasm-node/dist/native.js', './node_modules/rollup/dist/native.js'); } } catch(e){}\""
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "lucide-react": "^1.16.0",
