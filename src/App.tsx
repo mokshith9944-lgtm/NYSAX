@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -19,6 +19,7 @@ import { AuditModal } from './components/audit/AuditModal';
 import { ClientPortal } from './components/portal/ClientPortal';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { UserRole } from './types';
+import PortalFieldCollection from './components/effects/PortalFieldCollection';
 
 const MainApp: React.FC = () => {
   const { user, isAuthenticated, isAdmin } = useAuth();
@@ -31,6 +32,42 @@ const MainApp: React.FC = () => {
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [auditModalOpen, setAuditModalOpen] = useState(false);
 
+  // Sync state from URL pathname
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const path = window.location.pathname;
+      if (path === '/portal/client') {
+        if (!isAuthenticated) {
+          handleOpenAuth('login', 'client');
+          setCurrentView('home');
+        } else {
+          setCurrentView('client_portal');
+        }
+      } else if (path === '/admin') {
+        if (!isAdmin) {
+          handleOpenAuth('login', 'admin');
+          setCurrentView('home');
+        } else {
+          setCurrentView('admin_dashboard');
+        }
+      } else {
+        setCurrentView('home');
+      }
+    };
+
+    handleLocationChange();
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, [isAuthenticated, isAdmin]);
+
+  const setViewWithHistory = (view: 'home' | 'client_portal' | 'admin_dashboard') => {
+    setCurrentView(view);
+    const targetPath = view === 'home' ? '/' : view === 'client_portal' ? '/portal/client' : '/admin';
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({}, '', targetPath);
+    }
+  };
+
   const handleOpenAuth = (mode: 'login' | 'register' = 'login', role: UserRole = 'client') => {
     setAuthInitialMode(mode);
     setAuthInitialRole(role);
@@ -39,22 +76,28 @@ const MainApp: React.FC = () => {
 
   const handleAuthSuccess = (role: UserRole) => {
     if (role === 'admin') {
-      setCurrentView('admin_dashboard');
+      setViewWithHistory('admin_dashboard');
     } else {
-      setCurrentView('client_portal');
+      setViewWithHistory('client_portal');
     }
   };
 
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col selection:bg-black selection:text-white">
-      {/* Top Navbar */}
-      <Navbar
-        onOpenAuth={handleOpenAuth}
-        onOpenBooking={() => setBookingModalOpen(true)}
-        onOpenAudit={() => setAuditModalOpen(true)}
-        currentView={currentView}
-        setCurrentView={setCurrentView}
-      />
+    <div className="relative min-h-screen bg-[#000000] text-white flex flex-col selection:bg-white selection:text-black">
+      {/* Full-Website Ambient Portal Field Background */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-60">
+        <PortalFieldCollection mode="dark" saturation={0} brightness={0.85} speed={0.8} />
+      </div>
+
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Top Navbar */}
+        <Navbar
+          onOpenAuth={handleOpenAuth}
+          onOpenBooking={() => setBookingModalOpen(true)}
+          onOpenAudit={() => setAuditModalOpen(true)}
+          currentView={currentView}
+          setCurrentView={setViewWithHistory}
+        />
 
       {/* Main View Router */}
       <main className="flex-1">
@@ -105,7 +148,7 @@ const MainApp: React.FC = () => {
           onOpenAuth={handleOpenAuth}
           onOpenBooking={() => setBookingModalOpen(true)}
           onOpenAudit={() => setAuditModalOpen(true)}
-          setCurrentView={setCurrentView}
+          setCurrentView={setViewWithHistory}
         />
       )}
 
@@ -133,6 +176,7 @@ const MainApp: React.FC = () => {
         isOpen={auditModalOpen}
         onClose={() => setAuditModalOpen(false)}
       />
+      </div>
     </div>
   );
 };

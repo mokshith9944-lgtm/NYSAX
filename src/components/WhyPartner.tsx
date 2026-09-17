@@ -30,27 +30,36 @@ export const WhyPartner: React.FC = () => {
   ];
 
   return (
-    <section id="why-us" className="py-16 lg:py-25 bg-white">
+    <section id="why-us" className="py-24 bg-black border-t border-b border-neutral-900 text-white">
       <div className="max-w-7xl mx-auto px-6">
         <div>
-          <h2 className="lg:w-5/12 mb-10 lg:mb-16 font-normal text-4xl sm:text-5xl text-black -tracking-[1.92px]">
-            Why Partner <span className="italic font-serif">With Us</span>
+          <div className="flex items-center space-x-3 mb-4">
+            <span className="w-8 h-[1px] bg-white"></span>
+            <p className="text-[11px] uppercase font-mono tracking-[0.25em] text-neutral-400">
+              Methodology & Rigor // The Standard
+            </p>
+          </div>
+          <h2 className="lg:w-7/12 mb-16 font-light text-4xl sm:text-5xl text-white uppercase tracking-tight">
+            Why Enterprise Leaders <span className="font-serif italic font-normal text-neutral-400 lowercase">partner with nysa</span>
           </h2>
 
-          <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {pillars.map((item) => (
-              <article key={item.id} className="group">
-                <div className="size-14 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-300">
-                  <div className="group-hover:[&_svg]:text-white transition-colors">
-                    {item.icon}
+              <article key={item.id} className="group border border-neutral-800 bg-neutral-950/60 p-6 rounded-none flex flex-col justify-between hover:border-neutral-700 transition-colors">
+                <div>
+                  <div className="size-12 rounded-none bg-neutral-900 border border-neutral-800 flex items-center justify-center mb-6 group-hover:border-white transition-colors">
+                    <div className="[&_svg]:text-white">
+                      {item.icon}
+                    </div>
                   </div>
+                  <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest mb-2">Pillar 0{item.id}</div>
+                  <h4 className="mb-3 text-lg font-normal uppercase tracking-wide text-white">
+                    {item.title}
+                  </h4>
+                  <p className="text-xs text-neutral-400 leading-relaxed font-light">
+                    {item.description}
+                  </p>
                 </div>
-                <h4 className="mb-4 mt-8 text-2xl font-normal text-black tracking-tight">
-                  {item.title}
-                </h4>
-                <p className="text-base text-gray-600 leading-relaxed font-normal">
-                  {item.description}
-                </p>
               </article>
             ))}
           </div>

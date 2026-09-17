@@ -1,9 +1,10 @@
-import { User, Lead, Project, SupportTicket } from '../types';
+import { User, Lead, Project, SupportTicket, ClientReview } from '../types';
 
 const USERS_KEY = 'nysax_users_db_v1';
 const LEADS_KEY = 'nysax_leads_db_v1';
 const PROJECTS_KEY = 'nysax_projects_db_v1';
 const TICKETS_KEY = 'nysax_tickets_db_v1';
+const REVIEWS_KEY = 'nysax_reviews_db_v1';
 const CURRENT_USER_KEY = 'nysax_current_user_v1';
 
 // Initial seed data for admin and sample clients
@@ -336,6 +337,52 @@ export const db = {
     window.dispatchEvent(new Event('nysax_auth_change'));
   },
 
+  // Reviews & Authentic Feedback
+  getReviews: (): ClientReview[] => {
+    try {
+      const data = localStorage.getItem(REVIEWS_KEY);
+      if (!data) return [];
+      return JSON.parse(data);
+    } catch {
+      return [];
+    }
+  },
+
+  getApprovedReviews: (): ClientReview[] => {
+    return db.getReviews().filter(r => r.status === 'approved' && r.is_verified);
+  },
+
+  saveReview: (review: Omit<ClientReview, 'id' | 'createdAt'> & { id?: string; createdAt?: string }): ClientReview => {
+    const reviews = db.getReviews();
+    const newRev: ClientReview = {
+      id: review.id || `rev_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+      createdAt: review.createdAt || new Date().toISOString(),
+      author: review.author,
+      role: review.role,
+      company: review.company,
+      rating: review.rating,
+      feedback: review.feedback,
+      service: review.service,
+      status: review.status || 'pending',
+      is_verified: review.is_verified || false,
+    };
+    reviews.unshift(newRev);
+    localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+    window.dispatchEvent(new Event('nysax_storage_update'));
+    return newRev;
+  },
+
+  updateReviewStatus: (reviewId: string, status: 'pending' | 'approved' | 'rejected'): void => {
+    const reviews = db.getReviews();
+    const idx = reviews.findIndex(r => r.id === reviewId);
+    if (idx >= 0) {
+      reviews[idx].status = status;
+      reviews[idx].is_verified = status === 'approved';
+      localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+      window.dispatchEvent(new Event('nysax_storage_update'));
+    }
+  },
+
   // Export DB for backup or inspection
   exportDatabaseJSON: (): string => {
     return JSON.stringify({
@@ -343,6 +390,7 @@ export const db = {
       leads: db.getLeads(),
       projects: db.getProjects(),
       tickets: db.getTickets(),
+      reviews: db.getReviews(),
       exportedAt: new Date().toISOString(),
     }, null, 2);
   },
@@ -352,6 +400,7 @@ export const db = {
     localStorage.setItem(LEADS_KEY, JSON.stringify(INITIAL_LEADS));
     localStorage.setItem(PROJECTS_KEY, JSON.stringify(INITIAL_PROJECTS));
     localStorage.setItem(TICKETS_KEY, JSON.stringify(INITIAL_TICKETS));
+    localStorage.removeItem(REVIEWS_KEY);
     window.dispatchEvent(new Event('nysax_storage_update'));
   }
 };

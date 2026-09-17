@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { X, Calendar, Clock, CheckCircle2, User, Mail, Globe, ArrowRight } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { X, CheckCircle2 } from 'lucide-react';
 import { db } from '../../lib/storage';
 
 interface BookingModalProps {
@@ -14,82 +13,108 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [websiteOrHandle, setWebsiteOrHandle] = useState('');
-  const [service, setService] = useState('SEO Optimization');
-  const [budget, setBudget] = useState('$3,000 - $6,000/mo');
+  const [service, setService] = useState('Organic SEO Architecture');
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
   const dates = ['Today', 'Tomorrow', 'In 2 Days', 'Next Monday'];
   const times = ['10:00 AM EST', '01:30 PM EST', '03:00 PM EST', '05:30 PM EST'];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name.trim() || !email.trim()) return;
 
-    db.saveLead({
-      name,
-      email,
-      service,
-      websiteOrHandle,
-      budget,
-      message: `Strategy Call booked for: ${selectedDate} at ${selectedTime}`,
-      source: 'strategy_booking',
-      status: 'new'
-    });
+    setSubmitting(true);
 
-    setSubmitted(true);
     try {
-      confetti({ particleCount: 90, spread: 60, origin: { y: 0.6 } });
-    } catch {}
+      // 1. Save locally to CRM
+      db.saveLead({
+        name: name.trim(),
+        email: email.trim(),
+        service,
+        websiteOrHandle: websiteOrHandle.trim(),
+        message: `Consultation Booked for ${selectedDate} at ${selectedTime}`,
+        source: 'strategy_booking',
+        status: 'new'
+      });
+
+      // 2. Dispatch to /api/appointment (Resend Dual Dispatch)
+      try {
+        await fetch('/api/appointment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name.trim(),
+            email: email.trim(),
+            selectedDate,
+            selectedTime,
+            service,
+            websiteOrHandle: websiteOrHandle.trim(),
+          }),
+        });
+      } catch (err) {
+        console.warn('Appointment serverless API fallback:', err);
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Booking submission error:', err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
-      <div className="relative w-full max-w-lg rounded-[28px] bg-white border border-gray-200 shadow-2xl p-6 sm:p-8 overflow-hidden max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in">
+      <div className="relative w-full max-w-lg rounded-none bg-white border border-black shadow-2xl p-6 sm:p-8 overflow-hidden max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 p-2 text-black hover:bg-neutral-100 transition-colors cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
 
         {submitted ? (
-          <div className="text-center py-8 space-y-4">
-            <div className="size-14 rounded-full bg-black text-white flex items-center justify-center mx-auto">
-              <CheckCircle2 className="w-7 h-7" />
+          <div className="py-8 space-y-4 text-left font-mono">
+            <div className="w-8 h-8 bg-black text-white flex items-center justify-center">
+              <CheckCircle2 className="w-4 h-4" />
             </div>
-            <h3 className="text-2xl font-normal text-black tracking-tight">Call Confirmed</h3>
-            <p className="text-sm text-gray-600 max-w-sm mx-auto">
-              Your 30-minute growth strategy session is locked for <span className="font-semibold text-black">{selectedDate}</span> at <span className="font-semibold text-black">{selectedTime}</span>.
+            <h3 className="text-xl font-normal uppercase text-black tracking-tight">Consultation Scheduled</h3>
+            <p className="text-xs text-neutral-600 leading-relaxed">
+              Your 30-minute growth diagnostic is confirmed for <span className="font-semibold text-black">{selectedDate}</span> at <span className="font-semibold text-black">{selectedTime}</span>.
             </p>
-            <p className="text-xs text-gray-500 font-mono">
-              Meeting invite sent to {email}. Check your inbox.
+            <p className="text-[11px] text-neutral-500 uppercase tracking-wider">
+              Leadership confirmation dispatched to {email}. Direct attendance by Nikhil, Mokshith, or Amaresh.
             </p>
-            <button
-              onClick={onClose}
-              className="mt-4 px-6 py-2.5 rounded-full bg-black text-white text-xs uppercase tracking-wider font-medium hover:bg-gray-800 transition-colors"
-            >
-              Close
-            </button>
+            <div className="pt-4">
+              <button
+                onClick={onClose}
+                className="px-6 py-2.5 bg-black text-white text-xs font-mono uppercase tracking-widest border border-black hover:bg-neutral-900 transition-colors cursor-pointer"
+              >
+                Dismiss
+              </button>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="mb-6">
-              <p className="text-xs uppercase font-mono tracking-widest text-gray-400">
+            <div className="mb-4">
+              <p className="text-[10px] uppercase font-mono tracking-widest text-neutral-500">
                 Direct Scheduling
               </p>
-              <h3 className="text-2xl font-normal text-black -tracking-[0.8px] mt-1">
-                Book a 30-Min <span className="italic font-serif">Strategy Call</span>
+              <h3 className="text-2xl font-normal text-black uppercase tracking-tight mt-1">
+                Schedule Consultation
               </h3>
-              <p className="text-xs text-gray-600 mt-1">
-                No high-pressure sales pitch. We analyze your website, diagnose bottlenecks, and map an execution blueprint.
+              <p className="text-xs font-mono text-neutral-600 mt-1">
+                30-minute private evaluation. We review your site architecture, traffic funnels, and growth leverage points.
               </p>
             </div>
 
             {/* Date Selection */}
             <div>
-              <label className="block text-xs uppercase font-mono tracking-wider text-gray-700 mb-2 font-medium">
-                Select Date
+              <label className="block text-xs uppercase font-mono tracking-wider text-black mb-2 font-medium">
+                Select Consultation Date
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {dates.map((d) => (
@@ -97,10 +122,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
                     key={d}
                     type="button"
                     onClick={() => setSelectedDate(d)}
-                    className={`py-2 px-1 text-center rounded-xl text-xs font-mono transition-all cursor-pointer ${
+                    className={`py-2 px-1 text-center text-xs font-mono transition-colors cursor-pointer border ${
                       selectedDate === d
-                        ? 'bg-black text-white font-semibold'
-                        : 'bg-white border border-gray-200 text-gray-700 hover:border-black'
+                        ? 'bg-black text-white border-black font-semibold'
+                        : 'bg-white border-neutral-300 text-neutral-700 hover:border-black'
                     }`}
                   >
                     {d}
@@ -111,8 +136,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
 
             {/* Time Selection */}
             <div>
-              <label className="block text-xs uppercase font-mono tracking-wider text-gray-700 mb-2 font-medium">
-                Select Time Slot
+              <label className="block text-xs uppercase font-mono tracking-wider text-black mb-2 font-medium">
+                Select Time Window
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {times.map((t) => (
@@ -120,10 +145,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
                     key={t}
                     type="button"
                     onClick={() => setSelectedTime(t)}
-                    className={`py-2 px-1 text-center rounded-xl text-xs font-mono transition-all cursor-pointer ${
+                    className={`py-2 px-1 text-center text-xs font-mono transition-colors cursor-pointer border ${
                       selectedTime === t
-                        ? 'bg-black text-white font-semibold'
-                        : 'bg-white border border-gray-200 text-gray-700 hover:border-black'
+                        ? 'bg-black text-white border-black font-semibold'
+                        : 'bg-white border-neutral-300 text-neutral-700 hover:border-black'
                     }`}
                   >
                     {t}
@@ -135,62 +160,62 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
             {/* Contact details */}
             <div className="grid grid-cols-2 gap-3 pt-2">
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Your Name *</label>
+                <label className="block text-xs uppercase font-mono tracking-wider text-black mb-1">Principal Name *</label>
                 <input
                   type="text"
                   required
-                  placeholder="John Doe"
+                  placeholder="e.g. John Vance"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-white border border-gray-200 text-black text-xs focus:outline-none focus:border-black"
+                  className="w-full px-3 py-2 border border-black bg-white text-black text-xs font-mono focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Email *</label>
+                <label className="block text-xs uppercase font-mono tracking-wider text-black mb-1">Corporate Email *</label>
                 <input
                   type="email"
                   required
                   placeholder="john@brand.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-white border border-gray-200 text-black text-xs focus:outline-none focus:border-black"
+                  className="w-full px-3 py-2 border border-black bg-white text-black text-xs font-mono focus:outline-none"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Website / Instagram</label>
+                <label className="block text-xs uppercase font-mono tracking-wider text-black mb-1">Domain / Social Handle</label>
                 <input
                   type="text"
                   placeholder="@handle or domain"
                   value={websiteOrHandle}
                   onChange={(e) => setWebsiteOrHandle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-white border border-gray-200 text-black text-xs focus:outline-none focus:border-black"
+                  className="w-full px-3 py-2 border border-black bg-white text-black text-xs font-mono focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Service Needed</label>
+                <label className="block text-xs uppercase font-mono tracking-wider text-black mb-1">Core Discipline</label>
                 <select
                   value={service}
                   onChange={(e) => setService(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-white border border-gray-200 text-black text-xs focus:outline-none focus:border-black cursor-pointer"
+                  className="w-full px-3 py-2 border border-black bg-white text-black text-xs font-mono focus:outline-none cursor-pointer"
                 >
-                  <option value="SEO Optimization">SEO Optimization</option>
-                  <option value="Website Design">Website Design</option>
-                  <option value="Sales Strategy">Sales Strategy</option>
-                  <option value="Email Marketing">Email Marketing</option>
-                  <option value="Newbies in Social Media Marketing">Newbies in Social Media</option>
-                  <option value="Multi-Service Retainer">Full Retainer</option>
+                  <option value="Organic SEO Architecture">Organic SEO Architecture</option>
+                  <option value="Editorial Web Design & CRO">Editorial Web Design & CRO</option>
+                  <option value="Revenue & Sales Systems">Revenue & Sales Systems</option>
+                  <option value="Lifecycle Email Marketing">Lifecycle Email Marketing</option>
+                  <option value="Social Media Incubator">Social Media Incubator</option>
                 </select>
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full py-3.5 rounded-full bg-black text-white text-xs uppercase tracking-wider font-medium hover:bg-gray-800 transition-colors shadow-sm cursor-pointer"
+              disabled={submitting}
+              className="w-full py-3.5 bg-black text-white text-xs font-mono uppercase tracking-widest border border-black hover:bg-neutral-900 transition-colors cursor-pointer disabled:opacity-50"
             >
-              Confirm 30-Min Strategy Call
+              {submitting ? 'TRANSMITTING INQUIRY...' : 'Confirm Consultation'}
             </button>
           </form>
         )}

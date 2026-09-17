@@ -83,3 +83,16 @@ export interface ServiceDetail {
   deliverables: string[];
   idealFor: string;
 }
+
+export interface ClientReview {
+  id: string;
+  author: string;
+  role: string;
+  company: string;
+  rating: number; // 1-5
+  feedback: string;
+  service: string;
+  status: 'pending' | 'approved' | 'rejected';
+  is_verified: boolean;
+  createdAt: string;
+}

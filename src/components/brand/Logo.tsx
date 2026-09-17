@@ -26,24 +26,21 @@ export const Logo: React.FC<LogoProps> = ({
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      <div className={`${sizeMap[size]} rounded-xl overflow-hidden border ${isDark ? 'border-white/20 bg-neutral-900 shadow-md' : 'border-black/10 bg-black shadow-sm'} flex items-center justify-center p-0.5 shrink-0 transition-transform duration-300 group-hover:scale-105`}>
+      <div className={`${sizeMap[size]} rounded-none overflow-hidden border ${isDark ? 'border-neutral-800 bg-black' : 'border-black bg-black'} flex items-center justify-center p-0.5 shrink-0`}>
         <img
           src="/nysax-logo.png"
-          alt="NYSAX Agency Logo"
-          className="w-full h-full object-cover rounded-[10px]"
+          alt="Nysa Agency Logo"
+          className="w-full h-full object-cover rounded-none"
         />
       </div>
       {showText && (
         <div>
-          <div className="flex items-center gap-1.5">
-            <span className={`font-semibold text-xl tracking-tight ${isDark ? 'text-white' : 'text-black'} group-hover:opacity-80 transition-opacity`}>
-              NYSAX
-            </span>
-            <span className={`px-1.5 py-0.5 text-[9px] uppercase font-mono font-medium tracking-wider rounded ${isDark ? 'bg-white/10 text-white border border-white/20' : 'bg-black text-white border border-black'}`}>
-              STUDIO
+          <div className="flex items-center gap-2">
+            <span className={`font-medium text-lg tracking-widest uppercase ${isDark ? 'text-white' : 'text-black'}`}>
+              NYSA AGENCY
             </span>
           </div>
-          <p className={`text-[10px] tracking-wider uppercase -mt-0.5 font-mono ${isDark ? 'text-neutral-400' : 'text-gray-500'}`}>
+          <p className={`text-[9px] tracking-widest uppercase font-mono ${isDark ? 'text-neutral-400' : 'text-neutral-600'}`}>
             {subtext}
           </p>
         </div>

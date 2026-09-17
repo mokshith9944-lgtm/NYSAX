@@ -58,20 +58,23 @@ export const CaseStudies: React.FC = () => {
   ];
 
   return (
-    <section id="results" className="py-12 lg:py-25 bg-black rounded-4xl mx-3 sm:mx-6 lg:mx-8 my-10 text-white">
+    <section id="results" className="py-24 bg-black border-t border-b border-neutral-900 text-white">
       <div className="max-w-7xl mx-auto px-6">
         <div>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
             <div>
-              <p className="text-xs uppercase font-mono tracking-widest text-neutral-400 mb-2">
-                Portfolio Showcase
-              </p>
-              <h2 className="text-white text-4xl sm:text-5xl font-normal">
-                NYSAX <span className="italic font-serif text-gray-300">Case Studies</span>
+              <div className="flex items-center space-x-3 mb-4">
+                <span className="w-8 h-[1px] bg-white"></span>
+                <p className="text-[11px] uppercase font-mono tracking-[0.25em] text-neutral-400">
+                  Performance Records // Selected Work
+                </p>
+              </div>
+              <h2 className="text-white text-4xl sm:text-5xl font-light uppercase tracking-tight">
+                Case <span className="font-serif italic font-normal text-neutral-400 lowercase">studies</span>
               </h2>
             </div>
-            <p className="text-sm font-mono text-neutral-400 max-w-sm">
-              Verifiable proof of concept across eCommerce, SaaS, and personal creator brands.
+            <p className="text-xs font-mono text-neutral-400 max-w-sm uppercase tracking-wider">
+              Empirical proof across high-ticket B2B, eCommerce scaling, and venture-backed digital brands.
             </p>
           </div>
 
@@ -79,21 +82,21 @@ export const CaseStudies: React.FC = () => {
             {cases.map((item) => (
               <article
                 key={item.id}
-                className="p-6 sm:p-8 rounded-[20px] border border-[#1F1F1F] bg-neutral-950 flex flex-col justify-between hover:border-neutral-700 transition-all duration-300"
+                className="p-6 sm:p-8 rounded-none border border-neutral-800 bg-neutral-950/60 flex flex-col justify-between hover:border-neutral-700 transition-all duration-300"
               >
                 <div>
-                  <div className="flex py-2 text-neutral-400 text-xs justify-between font-mono border-b border-[#1F1F1F] mb-6">
-                    <span className="uppercase tracking-wider text-white">{item.type}</span>
-                    <span>{item.date}</span>
+                  <div className="flex py-2 text-neutral-400 text-xs justify-between font-mono border-b border-neutral-900 mb-6">
+                    <span className="uppercase tracking-widest text-white text-[11px]">{item.type}</span>
+                    <span className="text-[11px] text-neutral-500">{item.date}</span>
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-normal text-white mb-4 tracking-tight">
+                  <h3 className="text-xl sm:text-2xl font-normal uppercase tracking-tight text-white mb-4">
                     {item.title}
                   </h3>
 
-                  <ul className="space-y-2 mb-6">
+                  <ul className="space-y-2.5 mb-6">
                     {item.results.map((res, rIdx) => (
-                      <li key={rIdx} className="flex items-start gap-2 text-xs sm:text-sm text-neutral-300">
+                      <li key={rIdx} className="flex items-start gap-2 text-xs text-neutral-300 font-light">
                         <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0 mt-0.5" />
                         <span>{res}</span>
                       </li>
@@ -101,12 +104,12 @@ export const CaseStudies: React.FC = () => {
                   </ul>
                 </div>
 
-                <div className="pt-6 border-t border-[#1F1F1F] flex items-center justify-between">
+                <div className="pt-6 border-t border-neutral-900 flex items-center justify-between">
                   <div>
-                    <span className="text-2xl sm:text-3xl font-semibold text-white font-sans">{item.metric}</span>
-                    <span className="text-xs font-mono text-neutral-400 ml-2">({item.roas})</span>
+                    <span className="text-2xl sm:text-3xl font-light text-white font-mono">{item.metric}</span>
+                    <span className="text-xs font-mono text-neutral-500 ml-2">({item.roas})</span>
                   </div>
-                  <div className="size-8 rounded-full border border-neutral-700 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors">
+                  <div className="size-8 rounded-none border border-neutral-800 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors cursor-pointer">
                     <ArrowUpRight className="w-4 h-4" />
                   </div>
                 </div>

@@ -461,14 +461,14 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ onOpenBooking, onOpenAudit
             setIsOpen(true);
             setUnreadCount(0);
           }}
-          className="relative group p-3.5 rounded-full bg-black text-white shadow-xl hover:bg-neutral-800 active:scale-95 transition-all duration-300 flex items-center justify-center border border-neutral-700 cursor-pointer"
-          title="Chat with NYSAX Rule-Based Growth Advisor"
+          className="relative group p-3.5 rounded-none bg-black text-white shadow-xl hover:bg-neutral-900 active:scale-95 transition-all duration-300 flex items-center justify-center border border-white cursor-pointer"
+          title="Consult Nysa Agency Advisor"
         >
-          <div className="w-8 h-8 rounded-full overflow-hidden p-0.5 bg-black flex items-center justify-center">
-            <img src="/nysax-logo.png" alt="NYSAX Logo" className="w-full h-full object-cover rounded-full" />
+          <div className="w-8 h-8 rounded-none overflow-hidden p-0.5 bg-black flex items-center justify-center">
+            <img src="/nysax-logo.png" alt="Nysa Agency Logo" className="w-full h-full object-cover rounded-none" />
           </div>
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center border border-white">
+            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-none bg-white text-black text-[10px] font-mono font-bold flex items-center justify-center border border-black">
               {unreadCount}
             </span>
           )}
@@ -476,29 +476,29 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ onOpenBooking, onOpenAudit
         </button>
       )}
 
-      {/* Chat Window Container */}
+      {/* Chat Window Container - Sharp 0px Editorial */}
       {isOpen && (
-        <div className="w-[92vw] sm:w-[390px] h-[580px] max-h-[85vh] rounded-[24px] bg-white border border-gray-200 shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="w-[92vw] sm:w-[390px] h-[580px] max-h-[85vh] rounded-none bg-white border border-black shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 font-mono">
           {/* Header */}
-          <div className="p-4 bg-white border-b border-gray-200 flex items-center justify-between">
+          <div className="p-4 bg-white border-b border-black flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-10 h-10 rounded-xl overflow-hidden border border-gray-200 bg-black flex items-center justify-center p-0.5">
-                  <img src="/nysax-logo.png" alt="NYSAX Logo" className="w-full h-full object-cover rounded-[10px]" />
+                <div className="w-9 h-9 rounded-none overflow-hidden border border-black bg-black flex items-center justify-center p-0.5">
+                  <img src="/nysax-logo.png" alt="Nysa Agency Logo" className="w-full h-full object-cover rounded-none" />
                 </div>
-                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white"></span>
+                <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-none bg-white border border-black"></span>
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h3 className="text-sm font-semibold text-black leading-tight">
-                    NYSAX Advisor
+                  <h3 className="text-xs font-normal uppercase tracking-wider text-black leading-tight">
+                    Nysa Growth Advisor
                   </h3>
-                  <span className="px-1.5 py-0.2 text-[9px] bg-gray-100 text-black border border-gray-200 rounded uppercase font-mono font-medium">
-                    AI Agent
+                  <span className="px-1.5 py-0.2 text-[9px] bg-black text-white border border-black rounded-none uppercase font-mono">
+                    System
                   </span>
                 </div>
-                <p className="text-[11px] text-gray-500 flex items-center gap-1 font-mono">
-                  <span>Rule Engine</span> • <span className="text-emerald-600 font-medium">Active</span>
+                <p className="text-[10px] text-neutral-500 flex items-center gap-1 font-mono uppercase tracking-wider">
+                  <span>Engine</span> • <span className="text-black font-semibold">Online</span>
                 </p>
               </div>
             </div>
@@ -506,39 +506,39 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ onOpenBooking, onOpenAudit
             <div className="flex items-center gap-1">
               <button
                 onClick={handleResetChat}
-                className="p-1.5 rounded-full text-gray-400 hover:text-black hover:bg-gray-100 transition-colors cursor-pointer"
-                title="Restart conversation"
+                className="p-1.5 rounded-none text-neutral-400 hover:text-black hover:bg-neutral-100 transition-colors cursor-pointer"
+                title="Restart session"
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-full text-gray-400 hover:text-black hover:bg-gray-100 transition-colors cursor-pointer"
+                className="p-1.5 rounded-none text-neutral-400 hover:text-black hover:bg-neutral-100 transition-colors cursor-pointer"
                 title="Close chat"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
 
           {/* Messages Feed */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs bg-[#FAFAFA]">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs bg-neutral-50">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
               >
                 <div
-                  className={`max-w-[85%] p-3.5 rounded-2xl leading-relaxed whitespace-pre-line ${
+                  className={`max-w-[85%] p-3.5 rounded-none leading-relaxed whitespace-pre-line ${
                     msg.sender === 'user'
-                      ? 'bg-black text-white rounded-br-none shadow-xs'
-                      : 'bg-white text-gray-900 border border-gray-200 rounded-bl-none shadow-xs'
+                      ? 'bg-black text-white border border-black'
+                      : 'bg-white text-neutral-900 border border-neutral-300 shadow-2xs font-sans'
                   }`}
                 >
                   {msg.text}
                 </div>
 
-                <span className="text-[10px] text-gray-400 mt-1 px-1 font-mono">
+                <span className="text-[10px] text-neutral-400 mt-1 px-1 font-mono">
                   {msg.timestamp}
                 </span>
 
@@ -560,10 +560,10 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ onOpenBooking, onOpenAudit
                             handleAction(opt.action, opt.payload);
                           }
                         }}
-                        className="px-3 py-1.5 rounded-full bg-white hover:bg-black hover:text-white border border-gray-300 text-black text-[11px] font-medium transition-all text-left flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
+                        className="px-3 py-1.5 rounded-none bg-white hover:bg-black hover:text-white border border-neutral-300 text-black text-[10px] font-mono uppercase tracking-wider transition-all text-left flex items-center gap-1.5 cursor-pointer"
                       >
                         <span>{opt.label}</span>
-                        <ChevronRight className="w-3 h-3 text-gray-400 group-hover:text-white" />
+                        <ChevronRight className="w-3 h-3 text-neutral-400" />
                       </button>
                     ))}
                   </div>
@@ -572,10 +572,10 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ onOpenBooking, onOpenAudit
             ))}
 
             {isTyping && (
-              <div className="flex items-center gap-1.5 p-3 rounded-2xl bg-white border border-gray-200 w-20 text-gray-400">
-                <span className="w-1.5 h-1.5 bg-black rounded-full animate-bounce"></span>
-                <span className="w-1.5 h-1.5 bg-black rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                <span className="w-1.5 h-1.5 bg-black rounded-full animate-bounce [animation-delay:0.4s]"></span>
+              <div className="flex items-center gap-1.5 p-3 rounded-none bg-white border border-neutral-300 w-20 text-neutral-400">
+                <span className="w-1.5 h-1.5 bg-black rounded-none animate-pulse"></span>
+                <span className="w-1.5 h-1.5 bg-black rounded-none animate-pulse [animation-delay:0.2s]"></span>
+                <span className="w-1.5 h-1.5 bg-black rounded-none animate-pulse [animation-delay:0.4s]"></span>
               </div>
             )}
 
@@ -583,9 +583,9 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ onOpenBooking, onOpenAudit
           </div>
 
           {/* Quick Agency Contact Shortcuts */}
-          <div className="px-3 py-2 bg-white border-t border-gray-200 flex items-center justify-between text-[10px] text-gray-500 font-mono">
-            <span className="flex items-center gap-1 text-gray-500">
-              <Sparkles className="w-3 h-3 text-black" /> NYSAX Advisor
+          <div className="px-3 py-2 bg-white border-t border-neutral-200 flex items-center justify-between text-[10px] text-neutral-500 font-mono">
+            <span className="flex items-center gap-1 text-neutral-500">
+              <Sparkles className="w-3 h-3 text-black" /> Nysa Agency
             </span>
             <div className="flex items-center gap-2">
               <a
@@ -598,19 +598,19 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ onOpenBooking, onOpenAudit
               </a>
               <span>•</span>
               <a
-                href="mailto:nysaxofficial@gmail.com"
+                href="mailto:contact@nysaagency.com?subject=[Direct%20Inquiry]%20Nysa%20Agency"
                 className="hover:text-black flex items-center gap-1"
               >
-                <Mail className="w-3 h-3" /> Email
+                <Mail className="w-3 h-3" /> Direct Mail
               </a>
             </div>
           </div>
 
           {/* Input Bar */}
-          <div className="p-3 bg-white border-t border-gray-200 flex items-center gap-2">
+          <div className="p-3 bg-white border-t border-neutral-300 flex items-center gap-2">
             <input
               type="text"
-              placeholder={leadCaptureStep ? "Type your answer..." : "Ask about SEO, Pricing, Newbies, Web..."}
+              placeholder={leadCaptureStep ? "Type response..." : "Inquire: SEO, Pricing, Engineering..."}
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
               onKeyDown={(e) => {
@@ -618,15 +618,15 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ onOpenBooking, onOpenAudit
                   handleUserMessage(inputVal);
                 }
               }}
-              className="flex-1 px-3.5 py-2.5 rounded-full bg-gray-100 border border-gray-200 text-black text-xs placeholder:text-gray-400 focus:outline-none focus:border-black"
+              className="flex-1 px-3.5 py-2 rounded-none bg-neutral-50 border border-neutral-300 text-black text-xs font-mono placeholder:text-neutral-400 focus:outline-none focus:border-black"
             />
             <button
               onClick={() => handleUserMessage(inputVal)}
               disabled={!inputVal.trim()}
-              className="p-2.5 rounded-full bg-black text-white disabled:opacity-30 hover:bg-neutral-800 transition-all cursor-pointer"
+              className="p-2.5 rounded-none bg-black text-white disabled:opacity-30 hover:bg-neutral-900 transition-all cursor-pointer border border-black"
               title="Send message"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>

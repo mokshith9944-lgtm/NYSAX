@@ -30,17 +30,17 @@ export const Process: React.FC = () => {
   ];
 
   return (
-    <section id="process" className="py-16 lg:py-25 bg-white border-t border-gray-100">
+    <section id="process" className="py-24 bg-black border-t border-b border-neutral-900 text-white">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <p className="text-xs uppercase font-mono tracking-widest text-gray-400">
-            Execution Framework
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <p className="text-[11px] uppercase font-mono tracking-[0.25em] text-neutral-400">
+            Systematic Methodology // Sequence
           </p>
-          <h2 className="font-normal text-4xl sm:text-5xl text-black -tracking-[1.92px]">
-            The 4-Step <span className="italic font-serif">Growth System</span>
+          <h2 className="font-light text-4xl sm:text-5xl text-white uppercase tracking-tight">
+            The 4-Stage <span className="font-serif italic font-normal text-neutral-400 lowercase">engineering cycle</span>
           </h2>
-          <p className="text-gray-600 text-base max-w-xl mx-auto">
-            No guessing games. Our battle-tested framework systematically eliminates conversion friction and compounds agency revenue.
+          <p className="text-neutral-400 text-sm max-w-xl mx-auto font-light leading-relaxed">
+            Deterministic execution. We systematically dismantle conversion friction and architect unassailable category dominance.
           </p>
         </div>
 
@@ -48,26 +48,26 @@ export const Process: React.FC = () => {
           {steps.map((step, idx) => (
             <div
               key={idx}
-              className="p-6 sm:p-8 rounded-[24px] bg-[#FBFBFB] border border-gray-200 hover:border-black transition-all duration-300 flex flex-col justify-between shadow-xs"
+              className="p-6 sm:p-8 rounded-none bg-neutral-950/60 border border-neutral-800 hover:border-neutral-700 transition-all duration-300 flex flex-col justify-between"
             >
               <div>
-                <span className="font-serif italic text-4xl text-black block mb-6">
+                <span className="font-mono text-3xl text-white block mb-6">
                   {step.num}
                 </span>
 
-                <h3 className="text-xl font-normal text-black mb-3 tracking-tight">
+                <h3 className="text-lg font-normal uppercase tracking-wide text-white mb-3">
                   {step.title}
                 </h3>
 
-                <p className="text-sm text-gray-600 leading-relaxed mb-6 font-normal">
+                <p className="text-xs text-neutral-400 leading-relaxed mb-6 font-light">
                   {step.desc}
                 </p>
               </div>
 
-              <div className="pt-6 border-t border-gray-200 space-y-2">
+              <div className="pt-6 border-t border-neutral-900 space-y-2">
                 {step.deliverables.map((del, dIdx) => (
-                  <div key={dIdx} className="flex items-center gap-2 text-xs text-gray-600 font-mono">
-                    <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
+                  <div key={dIdx} className="flex items-center gap-2 text-[11px] text-neutral-400 font-mono">
+                    <span className="w-1 h-1 rounded-none bg-white shrink-0" />
                     <span>{del}</span>
                   </div>
                 ))}

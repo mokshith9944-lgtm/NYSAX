@@ -28,43 +28,61 @@ export const Faq: React.FC = () => {
   ];
 
   return (
-    <section id="faq" className="py-20 lg:py-25 bg-white border-t border-gray-100">
+    <section id="faq" className="py-24 bg-black border-t border-b border-neutral-900 text-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex gap-16 flex-col lg:flex-row">
           {/* Left Column: Heading */}
           <div className="lg:w-5/12">
-            <p className="text-xs uppercase font-mono tracking-widest text-gray-400 mb-2">
-              Common Inquiries
-            </p>
-            <h2 className="font-normal text-4xl sm:text-5xl mb-6 text-black -tracking-[1.92px]">
-              Frequently Asked <span className="italic font-serif">Questions</span>
+            <div className="flex items-center space-x-3 mb-4">
+              <span className="w-8 h-[1px] bg-white"></span>
+              <p className="text-[11px] uppercase font-mono tracking-[0.25em] text-neutral-400">
+                Inquiries & Protocols
+              </p>
+            </div>
+            <h2 className="font-light text-4xl sm:text-5xl mb-6 text-white uppercase tracking-tight">
+              Frequently Addressed <span className="font-serif italic font-normal text-neutral-400 lowercase">protocols</span>
             </h2>
-            <p className="text-gray-600 text-base leading-relaxed mb-6 font-normal">
-              Have a question that is not covered here? Reach out directly to <a href="mailto:nysaxofficial@gmail.com" className="text-black font-semibold underline">nysaxofficial@gmail.com</a> or message us on Instagram.
+            <p className="text-neutral-400 text-sm leading-relaxed mb-6 font-light">
+              Have a bespoke inquiry or technical requirement not itemized here? Reach our partners directly at{' '}
+              <a
+                href="mailto:contact@nysaagency.com?subject=[Direct%20Inquiry]%20Nysa%20Agency"
+                className="text-white underline underline-offset-4 hover:text-neutral-300 font-mono text-xs"
+              >
+                contact@nysaagency.com
+              </a>
+              {' '}or via Instagram{' '}
+              <a
+                href="https://www.instagram.com/nysax.agency?stkn=MXdycDVzN3lqc2tqZA=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white underline underline-offset-4 hover:text-neutral-300 font-mono text-xs"
+              >
+                @nysax.agency
+              </a>.
             </p>
           </div>
 
           {/* Right Column: Clean Accordion List */}
           <div className="lg:w-7/12">
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y divide-neutral-900 border-t border-b border-neutral-900">
               {faqs.map((faq, index) => {
                 const isOpen = openIndex === index;
                 return (
-                  <div key={index} className="py-5">
+                  <div key={index} className="py-6">
                     <button
                       onClick={() => setOpenIndex(isOpen ? null : index)}
                       className="w-full text-left flex items-center justify-between gap-4 group cursor-pointer"
                     >
-                      <span className="text-lg sm:text-xl font-normal text-black group-hover:text-gray-600 transition-colors">
+                      <span className="text-base sm:text-lg font-normal uppercase tracking-wide text-white group-hover:text-neutral-300 transition-colors">
                         {faq.q}
                       </span>
-                      <div className={`size-8 rounded-full border border-gray-300 shrink-0 flex items-center justify-center transition-transform duration-300 ${isOpen ? 'rotate-180 bg-black text-white border-black' : 'text-gray-600 group-hover:border-black'}`}>
-                        <ChevronDown className="w-4 h-4" />
+                      <div className={`size-7 rounded-none border border-neutral-800 shrink-0 flex items-center justify-center transition-transform duration-300 ${isOpen ? 'rotate-180 bg-white text-black border-white' : 'text-neutral-400 group-hover:border-neutral-600'}`}>
+                        <ChevronDown className="w-3.5 h-3.5" />
                       </div>
                     </button>
 
                     {isOpen && (
-                      <div className="pt-4 pr-10 text-gray-600 text-base leading-relaxed animate-in fade-in duration-200 font-normal">
+                      <div className="pt-4 pr-10 text-neutral-400 text-sm leading-relaxed animate-in fade-in duration-200 font-light">
                         {faq.a}
                       </div>
                     )}
