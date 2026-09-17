@@ -35,12 +35,12 @@ export default async function handler(req: any, res: any) {
     }
 
     const resendApiKey = process.env.RESEND_API_KEY;
-    const agencyInbox = process.env.AGENCY_INBOX_EMAIL || 'contact@nysaagency.com';
+    const agencyInbox = process.env.AGENCY_INBOX_EMAIL || 'mokshith9944@gmail.com';
     const senderEmail = process.env.SENDER_EMAIL || 'Nysa Agency <onboarding@resend.dev>';
 
-    // If Resend API Key is configured, execute dual dispatch via HTTP
+    // If Resend API Key is configured, execute dispatch via HTTP
     if (resendApiKey) {
-      // 1. Internal Self-Mail to Leadership
+      // 1. Internal Self-Mail to Leadership Inbox (mokshith9944@gmail.com)
       const internalMailPromise = fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -65,30 +65,38 @@ export default async function handler(req: any, res: any) {
       });
 
       // 2. Outbound Acknowledgment to Prospective Client
-      const outboundAckPromise = fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${resendApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: senderEmail,
-          to: [email],
-          subject: `Inquiry Received: Nysa Agency`,
-          text: `Dear ${name},\n\n` +
-                `Your project brief has reached our desk. Our leadership team has received your submission and is reviewing your specifications.\n\n` +
-                `Expect a direct response from our desk within 24 hours.\n\n` +
-                `Sincerely,\n\n` +
-                `Nikhil (Founder)\n` +
-                `Mokshith (Co-Founder)\n` +
-                `Amaresh (Co-Founder)\n\n` +
-                `Nysa Agency\n` +
-                `Direct: contact@nysaagency.com\n` +
-                `Instagram: https://www.instagram.com/nysax.agency\n`,
-        }),
-      });
+      // In Resend sandbox mode (using onboarding@resend.dev), outbound emails can only be sent to the account owner.
+      // Once custom domain (e.g. concierge@nysaagency.com) is verified, outbound emails to all clients activate automatically.
+      const isSandboxSender = senderEmail.includes('resend.dev');
+      const promises: Promise<any>[] = [internalMailPromise];
 
-      await Promise.allSettled([internalMailPromise, outboundAckPromise]);
+      if (!isSandboxSender || email.toLowerCase() === agencyInbox.toLowerCase()) {
+        const outboundAckPromise = fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${resendApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: senderEmail,
+            to: [email],
+            subject: `Inquiry Received: Nysa Agency`,
+            text: `Dear ${name},\n\n` +
+                  `Your project brief has reached our desk. Our leadership team has received your submission and is reviewing your specifications.\n\n` +
+                  `Expect a direct response from our desk within 24 hours.\n\n` +
+                  `Sincerely,\n\n` +
+                  `Nikhil (Founder)\n` +
+                  `Mokshith (Co-Founder)\n` +
+                  `Amaresh (Co-Founder)\n\n` +
+                  `Nysa Agency\n` +
+                  `Direct: contact@nysaagency.com\n` +
+                  `Instagram: https://www.instagram.com/nysax.agency\n`,
+          }),
+        });
+        promises.push(outboundAckPromise);
+      }
+
+      await Promise.allSettled(promises);
     } else {
       console.warn('RESEND_API_KEY is not configured in Vercel environment variables. Inbound lead logged to serverless stdout:', {
         name, email, service, budget, websiteOrHandle, message

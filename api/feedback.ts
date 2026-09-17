@@ -40,7 +40,7 @@ export default async function handler(req: any, res: any) {
 
       // Optional: notify agency inbox
       const resendApiKey = process.env.RESEND_API_KEY;
-      const agencyInbox = process.env.AGENCY_INBOX_EMAIL || 'contact@nysaagency.com';
+      const agencyInbox = process.env.AGENCY_INBOX_EMAIL || 'mokshith9944@gmail.com';
       const senderEmail = process.env.SENDER_EMAIL || 'Nysa Agency <onboarding@resend.dev>';
 
       if (resendApiKey) {

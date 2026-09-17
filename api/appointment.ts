@@ -32,11 +32,11 @@ export default async function handler(req: any, res: any) {
     }
 
     const resendApiKey = process.env.RESEND_API_KEY;
-    const agencyInbox = process.env.AGENCY_INBOX_EMAIL || 'contact@nysaagency.com';
+    const agencyInbox = process.env.AGENCY_INBOX_EMAIL || 'mokshith9944@gmail.com';
     const senderEmail = process.env.SENDER_EMAIL || 'Nysa Agency <onboarding@resend.dev>';
 
     if (resendApiKey) {
-      // 1. Internal Consultation Notification
+      // 1. Internal Consultation Notification to Leadership Inbox (mokshith9944@gmail.com)
       const internalMailPromise = fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -60,30 +60,38 @@ export default async function handler(req: any, res: any) {
       });
 
       // 2. Outbound Confirmation to Client
-      const outboundAckPromise = fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${resendApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: senderEmail,
-          to: [email],
-          subject: `Consultation Confirmed: Nysa Agency (${selectedDate} at ${selectedTime})`,
-          text: `Dear ${name},\n\n` +
-                `Your strategy consultation with Nysa Agency has been scheduled for ${selectedDate} at ${selectedTime}.\n\n` +
-                `Our leadership team (Nikhil, Mokshith, Amaresh) will review your digital footprint and present custom execution recommendations.\n\n` +
-                `A calendar invite with video link will arrive prior to your session.\n\n` +
-                `Sincerely,\n\n` +
-                `Nikhil (Founder)\n` +
-                `Mokshith (Co-Founder)\n` +
-                `Amaresh (Co-Founder)\n\n` +
-                `Nysa Agency\n` +
-                `contact@nysaagency.com\n`,
-        }),
-      });
+      // In Resend sandbox mode (using onboarding@resend.dev), outbound emails can only be sent to the account owner.
+      // Once custom domain (e.g. concierge@nysaagency.com) is verified, outbound emails to all clients activate automatically.
+      const isSandboxSender = senderEmail.includes('resend.dev');
+      const promises: Promise<any>[] = [internalMailPromise];
 
-      await Promise.allSettled([internalMailPromise, outboundAckPromise]);
+      if (!isSandboxSender || email.toLowerCase() === agencyInbox.toLowerCase()) {
+        const outboundAckPromise = fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${resendApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: senderEmail,
+            to: [email],
+            subject: `Consultation Confirmed: Nysa Agency (${selectedDate} at ${selectedTime})`,
+            text: `Dear ${name},\n\n` +
+                  `Your strategy consultation with Nysa Agency has been scheduled for ${selectedDate} at ${selectedTime}.\n\n` +
+                  `Our leadership team (Nikhil, Mokshith, Amaresh) will review your digital footprint and present custom execution recommendations.\n\n` +
+                  `A calendar invite with video link will arrive prior to your session.\n\n` +
+                  `Sincerely,\n\n` +
+                  `Nikhil (Founder)\n` +
+                  `Mokshith (Co-Founder)\n` +
+                  `Amaresh (Co-Founder)\n\n` +
+                  `Nysa Agency\n` +
+                  `contact@nysaagency.com\n`,
+          }),
+        });
+        promises.push(outboundAckPromise);
+      }
+
+      await Promise.allSettled(promises);
     }
 
     return res.status(200).json({
