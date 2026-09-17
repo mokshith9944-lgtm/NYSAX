@@ -18,34 +18,32 @@ export const RoiCalculator: React.FC<RoiCalculatorProps> = ({ onOpenBooking }) =
   const estimatedRoiMultiplier = ((quarterlyRevenueLift / 9000) * 10).toFixed(0);
 
   return (
-    <section id="roi-calculator" className="py-24 relative overflow-hidden bg-[#070C18]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/10 border border-primary/30 text-blue-300 text-xs font-semibold uppercase tracking-wider">
-            <Calculator className="w-3.5 h-3.5 text-primary" />
-            <span>Interactive Simulator</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-display font-black text-white tracking-tight">
-            Calculate Your Untapped Revenue Potential.
+    <section id="roi-calculator" className="py-20 lg:py-25 bg-white border-t border-gray-100">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <p className="text-xs uppercase font-mono tracking-widest text-gray-400">
+            Performance Simulator
+          </p>
+          <h2 className="text-4xl sm:text-5xl font-normal text-black -tracking-[1.92px]">
+            Calculate Your Untapped <span className="italic font-serif">Revenue Potential</span>
           </h2>
-          <p className="text-slate-300 text-base">
-            See how fixing your website conversion rate, ranking on Google, and automating email retention translates into raw bottom-line revenue.
+          <p className="text-gray-600 text-base max-w-xl mx-auto">
+            See how fixing your website conversion rate, ranking on Google, and automating email retention translates directly into bottom-line revenue.
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 sm:p-10 rounded-3xl bg-[#0D1527] border border-white/10 backdrop-blur-2xl shadow-2xl relative">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 sm:p-10 rounded-[28px] bg-[#FBFBFB] border border-gray-200 shadow-xs">
           {/* Controls Column */}
           <div className="lg:col-span-7 space-y-6">
-            <h3 className="text-lg font-display font-bold text-white flex items-center gap-2">
-              <Zap className="w-4 h-4 text-primary" />
+            <h3 className="text-xl font-normal text-black tracking-tight">
               Adjust Current Business Metrics
             </h3>
 
             {/* Slider 1: Monthly Revenue */}
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-semibold">
-                <span className="text-slate-300">Current Monthly Revenue:</span>
-                <span className="text-primary font-mono text-sm font-bold">${monthlyRevenue.toLocaleString()} / mo</span>
+                <span className="text-gray-700">Current Monthly Revenue:</span>
+                <span className="text-black font-mono text-sm font-bold">${monthlyRevenue.toLocaleString()} / mo</span>
               </div>
               <input
                 type="range"
@@ -54,9 +52,9 @@ export const RoiCalculator: React.FC<RoiCalculatorProps> = ({ onOpenBooking }) =
                 step="5000"
                 value={monthlyRevenue}
                 onChange={(e) => setMonthlyRevenue(Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-primary"
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
               />
-              <div className="flex justify-between text-[10px] text-slate-500">
+              <div className="flex justify-between text-[10px] text-gray-400 font-mono">
                 <span>$5,000</span>
                 <span>$100,000</span>
                 <span>$200,000+</span>
@@ -66,8 +64,8 @@ export const RoiCalculator: React.FC<RoiCalculatorProps> = ({ onOpenBooking }) =
             {/* Slider 2: Conversion Rate */}
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-semibold">
-                <span className="text-slate-300">Current Conversion Rate:</span>
-                <span className="text-cyan-400 font-mono text-sm font-bold">{conversionRate.toFixed(1)}%</span>
+                <span className="text-gray-700">Current Website Conversion Rate:</span>
+                <span className="text-black font-mono text-sm font-bold">{conversionRate.toFixed(1)}%</span>
               </div>
               <input
                 type="range"
@@ -76,20 +74,20 @@ export const RoiCalculator: React.FC<RoiCalculatorProps> = ({ onOpenBooking }) =
                 step="0.1"
                 value={conversionRate}
                 onChange={(e) => setConversionRate(Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
               />
-              <div className="flex justify-between text-[10px] text-slate-500">
-                <span>0.5% (Low)</span>
+              <div className="flex justify-between text-[10px] text-gray-400 font-mono">
+                <span>0.5% (Leaking Leads)</span>
                 <span>2.0% (Average)</span>
-                <span>5.0% (High)</span>
+                <span>5.0% (Elite)</span>
               </div>
             </div>
 
-            {/* Slider 3: Average Order / Contract Value */}
+            {/* Slider 3: Average Customer Value */}
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-semibold">
-                <span className="text-slate-300">Average Customer / Order Value:</span>
-                <span className="text-indigo-400 font-mono text-sm font-bold">${avgCustomerValue.toLocaleString()}</span>
+                <span className="text-gray-700">Average Order or Client LTV:</span>
+                <span className="text-black font-mono text-sm font-bold">${avgCustomerValue.toLocaleString()}</span>
               </div>
               <input
                 type="range"
@@ -98,95 +96,59 @@ export const RoiCalculator: React.FC<RoiCalculatorProps> = ({ onOpenBooking }) =
                 step="50"
                 value={avgCustomerValue}
                 onChange={(e) => setAvgCustomerValue(Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-400"
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
               />
-              <div className="flex justify-between text-[10px] text-slate-500">
+              <div className="flex justify-between text-[10px] text-gray-400 font-mono">
                 <span>$50</span>
                 <span>$1,500</span>
                 <span>$3,000+</span>
               </div>
             </div>
 
-            {/* Assumptions Breakdown */}
-            <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-2 text-xs text-slate-400">
-              <p className="font-semibold text-slate-300 text-[11px] uppercase tracking-wider">
-                Systemic Growth Factors Applied:
-              </p>
-              <div className="grid grid-cols-2 gap-2 text-[11px]">
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Website CRO Lift: +{((projectedConversionRate - conversionRate) / conversionRate * 100).toFixed(0)}%</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Email Flow Revenue: +28%</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Organic SEO Traffic: +20%</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Sales Closing Rate: +35%</span>
-                </div>
-              </div>
+            {/* Explanatory notes */}
+            <div className="p-4 rounded-xl bg-white border border-gray-200 text-xs text-gray-600 space-y-1.5">
+              <p className="font-semibold text-black">What drives this model?</p>
+              <p>• CRO & speed architecture lifts conversion from {conversionRate.toFixed(1)}% to {projectedConversionRate.toFixed(1)}%</p>
+              <p>• High-intent SEO + automated Klaviyo lifecycle retention captures abandoned pipeline.</p>
             </div>
           </div>
 
-          {/* Results Projection Card */}
-          <div className="lg:col-span-5 p-6 rounded-2xl bg-gradient-to-br from-primary/10 via-[#0E162B] to-[#090F1E] border border-primary/30 flex flex-col justify-between relative overflow-hidden shadow-xl">
-            <div className="space-y-5">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] uppercase font-bold tracking-wider text-blue-300">
-                  Projected with NYSAX
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
-                  High Confidence
-                </span>
+          {/* Results Summary Box - High Contrast Pure Black Studio Block */}
+          <div className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-8 rounded-2xl bg-black text-white space-y-6">
+            <div>
+              <p className="text-xs uppercase font-mono tracking-wider text-gray-400">
+                Projected 90-Day Pipeline Lift
+              </p>
+              <div className="mt-2 text-4xl sm:text-5xl font-normal tracking-tight text-white font-sans">
+                +${quarterlyRevenueLift.toLocaleString()}
               </div>
-
-              <div>
-                <span className="text-xs text-slate-400">Projected Monthly Revenue:</span>
-                <p className="text-3xl sm:text-4xl font-display font-black text-white mt-0.5 tracking-tight">
-                  ${projectedMonthlyRevenue.toLocaleString()}
-                  <span className="text-sm font-normal text-slate-400"> / mo</span>
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 pt-3 border-t border-white/10">
-                <div>
-                  <span className="text-[11px] text-slate-400">Monthly Revenue Lift:</span>
-                  <p className="text-xl font-bold text-emerald-400 font-mono">
-                    +${monthlyRevenueLift.toLocaleString()}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-[11px] text-slate-400">90-Day Pipeline Gain:</span>
-                  <p className="text-xl font-bold text-cyan-400 font-mono">
-                    +${quarterlyRevenueLift.toLocaleString()}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-primary/10 border border-primary/20">
-                <p className="text-xs text-blue-200">
-                  ⚡ Estimated Annualized Return On Investment: <span className="font-bold text-white">{estimatedRoiMultiplier}%</span> based on typical NYSAX retainer terms.
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-6">
-              <button
-                onClick={onOpenBooking}
-                className="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2 group active:scale-95"
-              >
-                <span>Claim This Growth Plan</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <p className="text-[10px] text-center text-slate-500 mt-2">
-                Customized growth roadmap presented on our strategy call.
+              <p className="text-xs text-emerald-400 mt-1 font-mono">
+                +${monthlyRevenueLift.toLocaleString()}/mo ongoing run-rate
               </p>
             </div>
+
+            <div className="space-y-3 py-4 border-y border-neutral-800 text-xs">
+              <div className="flex justify-between">
+                <span className="text-neutral-400">Target Conversion Rate:</span>
+                <span className="text-white font-semibold font-mono">{projectedConversionRate.toFixed(1)}%</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400">New Monthly Revenue:</span>
+                <span className="text-white font-semibold font-mono">${projectedMonthlyRevenue.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-400">Estimated 90-Day ROI:</span>
+                <span className="text-white font-semibold font-mono">{estimatedRoiMultiplier}%</span>
+              </div>
+            </div>
+
+            <button
+              onClick={onOpenBooking}
+              className="w-full py-4 rounded-full bg-white text-black font-medium text-xs uppercase tracking-wider hover:bg-gray-100 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Review Growth Model</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>

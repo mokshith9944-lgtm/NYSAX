@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Search, 
-  Layout, 
-  Target, 
-  Mail, 
-  Sparkles, 
-  CheckCircle2, 
-  ArrowUpRight, 
-  Layers,
-  ChevronRight,
-  Clock,
-  TrendingUp
-} from 'lucide-react';
+import { ChevronDown, ArrowUpRight, CheckCircle2, Clock, Sparkles } from 'lucide-react';
 import { ServiceDetail } from '../types';
 
 interface ServicesProps {
@@ -20,14 +8,14 @@ interface ServicesProps {
 }
 
 export const Services: React.FC<ServicesProps> = ({ onOpenBooking, onOpenAudit }) => {
-  const [activeTab, setActiveTab] = useState<string>('all');
+  const [expandedId, setExpandedId] = useState<string | null>('seo');
 
   const services: (ServiceDetail & { number: string })[] = [
     {
       id: 'seo',
       number: '01',
-      title: 'SEO Optimization & Organic Dominance',
-      shortDesc: 'Drive high-intent buyer traffic and rank #1 on Google without paying per click.',
+      title: 'SEO Optimization',
+      shortDesc: 'Drive high-intent buyer traffic and rank #1 on Google organically without recurring ad spend.',
       fullDesc: 'We dismantle your competitors keyword rankings with technical audits, semantic content clusters, high-authority digital PR backlinks, and Core Web Vitals optimization to turn Google into your #1 automated customer acquisition channel.',
       iconName: 'Search',
       features: [
@@ -45,20 +33,20 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking, onOpenAudit }
         'Monthly Live Ranking & Backlink Dashboard',
         'On-Page Optimization of Core Landing Pages'
       ],
-      idealFor: 'Businesses tired of rising ad costs wanting compounding organic traffic.'
+      idealFor: 'Brands looking for permanent organic dominance and reduced customer acquisition costs.'
     },
     {
       id: 'website',
       number: '02',
-      title: 'High-Converting Website Design & Funnels',
-      shortDesc: 'Bespoke, lightning-fast web experiences engineered specifically to turn visitors into paying clients.',
+      title: 'Website Design & Funnels',
+      shortDesc: 'Bespoke, sub-second load web platforms engineered to convert traffic into high-value clients.',
       fullDesc: 'A website should not merely look pretty—it must function as your hardest working 24/7 salesperson. We craft custom, high-velocity websites with psychological conversion architecture, interactive visual storytelling, and ultra-slick mobile experiences.',
       iconName: 'Layout',
       features: [
         'Psychology-Driven UX Wireframing & Responsive Visual Design',
         'Ultra-Fast Performance Architecture (< 1s Load Time)',
         'Conversion Rate Optimization (CRO) & A/B Funnel Split-Testing',
-        'Custom Animations, Micro-Interactions & Interactive Calculators',
+        'Custom Animations, Micro-Interactions & Interactive Simulators',
         'Seamless CRM, Payment & Analytics Tracking Integration'
       ],
       metrics: '3.4x Average Conversion Rate Increase',
@@ -69,242 +57,200 @@ export const Services: React.FC<ServicesProps> = ({ onOpenBooking, onOpenAudit }
         'Automated Lead Capture & Booking Integrations',
         'Full Admin Content Management Capabilities'
       ],
-      idealFor: 'Brands looking to establish instant prestige and convert traffic with high efficiency.'
+      idealFor: 'Companies with outdated websites leaking high-intent leads.'
     },
     {
-      id: 'sales_strategy',
+      id: 'sales',
       number: '03',
-      title: 'Sales Strategy & Revenue Architecture',
-      shortDesc: 'Systematize your sales pipeline, close high-ticket clients, and eliminate revenue plateaus.',
-      fullDesc: 'We analyze your entire customer acquisition funnel, craft irresistible offers, structure high-ticket sales pipelines, and write battle-tested closing scripts so your team closes leads with predictable consistency.',
+      title: 'Sales Strategy Architecture',
+      shortDesc: 'End-to-end revenue engineering, pipeline qualification, and high-ticket closing playbooks.',
+      fullDesc: 'Traffic without sales infrastructure is wasted capital. We architect end-to-end sales mechanisms: high-ticket offer restructuring, value proposition positioning, multi-touch nurture sequences, objection bibles, and inbound lead qualification engines.',
       iconName: 'Target',
       features: [
-        'High-Ticket Offer Structuring & Pricing Optimization',
-        'Outbound & Inbound Lead Qualification Systems',
-        'Battle-Tested Closing Scripts & Objection Handling Playbooks',
-        'CRM Pipeline Automation & Follow-Up Workflows',
-        'Sales Rep Coaching & Performance KPI Dashboards'
+        'Irresistible High-Ticket Offer Design & Pricing Restructuring',
+        'Inbound Pipeline Routing & Automated CRM Qualification',
+        'Sales Rep Scripting, Battle Cards & Objection Overcoming Playbooks',
+        'Multi-Channel Deal Acceleration Sequences (SMS, Email, Calls)',
+        'Pipeline Stage Conversion Analytics & Leakage Diagnosis'
       ],
-      metrics: '+62% Discovery-to-Close Rate',
-      timeline: '2 - 3 Weeks Setup',
+      metrics: '+$18,500 Avg. Deal Size Expansion',
+      timeline: '2 - 3 Weeks Deployment',
       deliverables: [
-        'Custom Sales Playbook & Objection Bible',
-        'Automated CRM Lead Pipeline & Scoring Rules',
-        'Recorded Script Roleplays & Training Modules',
-        'Weekly Pipeline Review & Optimization Sprints'
+        'Proprietary High-Ticket Offer Canvas',
+        'Automated Lead Scoring Matrix',
+        'Full Sales Scripting & Objection Bible',
+        'Weekly Deal Review & Conversion Coaching'
       ],
-      idealFor: 'Service businesses, consultants, and B2B companies looking to close higher ticket deals.'
+      idealFor: 'B2B companies, agencies, and service providers looking to scale deal velocity.'
     },
     {
-      id: 'email_marketing',
+      id: 'email',
       number: '04',
-      title: 'Automated Email Marketing & Retention',
-      shortDesc: 'Generate 30%+ of your total revenue on autopilot with high-converting lifecycle flows.',
-      fullDesc: 'Stop leaving money on the table. We build bulletproof automated email flows and high-engagement broadcast campaigns that nurture subscribers into repeat, high-LTV buyers without ever being flagged as spam.',
+      title: 'Automated Email Marketing',
+      shortDesc: 'High-converting lifecycle retention flows turning subscribers into repeat buyers on autopilot.',
+      fullDesc: 'Email delivers an average $42 ROI for every $1 spent. We architect automated Klaviyo and Omnisend lifecycle engines, behavioral trigger sequences, segmentation trees, and deliverability protocols that consistently extract 30%+ of your total revenue from your owned list.',
       iconName: 'Mail',
       features: [
-        'High-Converting Welcome & Indoctrination Sequences',
-        'Abandoned Cart, Checkout & Browse Recovery Automations',
-        'VIP Customer Retention, Cross-Sell & Win-Back Funnels',
-        'Deliverability Health & Inbox Placement Optimization',
-        'Engaging Storytelling Broadcasts & Promo Launches'
+        'Core 8-Part Lifecycle Automation (Welcome, Browse/Cart Abandon, VIP, Winback)',
+        'Advanced RFM (Recency, Frequency, Monetary) Customer Segmentation',
+        'Plaintext & Editorial Branded Copywriting with High-CTR Hooks',
+        'Inbox Deliverability Defense (SPF, DKIM, DMARC, Domain Warmup)',
+        'Comprehensive A/B Subject Line & Send-Time Machine Optimization'
       ],
-      metrics: '34% - 46% of Total Revenue via Email',
-      timeline: '10 - 14 Days to Launch',
+      metrics: '34.8% of Total Brand Revenue via Email',
+      timeline: '10 Days to Live Flows',
       deliverables: [
-        'Up to 8 Custom Automated Email Flows',
-        'Branded Responsive Email Templates',
-        'Segmentation Matrix & List Hygiene Overhaul',
-        'Bi-Weekly Campaign Strategy & Copy Deliverables'
+        '8 Fully Automated Lifecycle Flows',
+        'Segmented Customer Database Architecture',
+        'Bi-Weekly High-Converting Campaign Blasts',
+        'Real-Time Revenue Attribution Dashboard'
       ],
-      idealFor: 'eCommerce stores, creators, and brands seeking reliable recurring revenue.'
+      idealFor: 'eCommerce stores and digital brands under-monetizing their subscriber database.'
     },
     {
-      id: 'social_media_newbies',
+      id: 'newbies',
       number: '05',
-      title: 'Newbies in Social Media Marketing (Zero-to-Hero)',
-      shortDesc: 'A specialized incubator for beginners to build an influential, profitable social presence from scratch.',
-      fullDesc: 'New to social media marketing? Overwhelmed by algorithms, Reels, TikTok, and hashtags? We take absolute beginners by the hand and build a magnetic personal or business brand on Instagram and TikTok from ground zero to consistent viral reach and engaged followers.',
+      title: 'Newbies in Social Media',
+      shortDesc: 'Dedicated zero-to-hero incubator for beginners with 0 followers to build an engaged audience.',
+      fullDesc: 'Starting from scratch is intimidating. Our dedicated beginner social media incubator is built specifically for founders, local businesses, and creators starting at zero. We give you the complete roadmap: bio makeover, 30-day viral short-form script pack, camera confidence frameworks, algorithm growth hacks, and automated DM-to-lead funnels.',
       iconName: 'Sparkles',
       features: [
-        'Zero-to-Hero Profile Makeover (Bio, Highlight Covers, Aesthetic Grid)',
-        'Viral Short-Form Scripting (Reels & TikTok 3-Second Hook Formulas)',
-        'Beginner-Friendly Content Creation Calendar & Trend Alerts',
-        'Algorithm Growth Playbook (Hashtag strategy, audio timing, engagement loops)',
-        'Follower-to-Customer Conversion Funnels (DM Automation & Link-in-Bio)'
+        'Day-0 Profile & Bio Optimization for Maximum Follower Conversion',
+        '30-Day Plug-and-Play Viral Hook & Reel Script Library',
+        'Simple Smartphone Content Filming & CapCut Editing Guides',
+        'Instagram Algorithm & Reach Hacks to Beat Plateau Traps',
+        'Automated DM Keyword Trigger Funnels (Turn Comments into Paying Leads)'
       ],
-      metrics: '0 to 10k+ Engaged Followers in 60-90 Days',
-      timeline: '30-Day Guided Launch',
+      metrics: '0 to 10,000+ Followers in First 60-90 Days',
+      timeline: '30-Day Intensive Incubation',
       deliverables: [
-        '30-Day Plug-and-Play Viral Content Calendar',
-        '15 Custom Written Reel/TikTok Video Scripts',
-        'Step-by-Step Mobile Filming & Editing Guide',
-        'Weekly 1-on-1 Strategy & Algorithm Check-in Calls'
+        'Personalized 30-Day Social Growth Playbook',
+        '30 High-Performing Reel/Short Video Scripts',
+        'Profile Visual Makeover & Highlights Kit',
+        'ManyChat DM Automation Workflow Setup',
+        'Direct 1-on-1 Strategist WhatsApp/Telegram Support'
       ],
-      idealFor: 'New business owners, beginners, and entrepreneurs starting with zero social media experience.'
+      idealFor: 'Founders, solopreneurs, and local brands starting from 0 who want rapid organic traction.'
     }
   ];
 
-  const filteredServices = activeTab === 'all' 
-    ? services 
-    : services.filter(s => s.id === activeTab);
-
-  const getServiceIcon = (id: string) => {
-    switch (id) {
-      case 'seo': return <Search className="w-5 h-5 text-primary" />;
-      case 'website': return <Layout className="w-5 h-5 text-cyan-400" />;
-      case 'sales_strategy': return <Target className="w-5 h-5 text-indigo-400" />;
-      case 'email_marketing': return <Mail className="w-5 h-5 text-blue-400" />;
-      case 'social_media_newbies': return <Sparkles className="w-5 h-5 text-amber-400" />;
-      default: return <Sparkles className="w-5 h-5 text-primary" />;
-    }
-  };
-
   return (
-    <section id="services" className="py-24 relative overflow-hidden bg-[#070C18]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header - NexStudio Editorial Layout */}
-        <div className="text-center max-w-3xl mx-auto mb-14 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-primary/10 border border-primary/30 text-blue-300 text-xs font-semibold uppercase tracking-wider">
-            <Layers className="w-3.5 h-3.5 text-primary" />
-            <span>Tailored Agency Services</span>
-          </div>
-          <h2 className="text-3xl sm:text-5xl font-display font-black text-white tracking-tight">
-            High-Impact Capabilities Built For Exponential Growth.
-          </h2>
-          <p className="text-slate-300 text-base">
-            Every service is engineered as a precision revenue engine with clear deliverables, guaranteed execution speed, and measurable business ROI.
-          </p>
-        </div>
-
-        {/* NexStudio Filter Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-12">
-          <button
-            onClick={() => setActiveTab('all')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-              activeTab === 'all'
-                ? 'bg-primary text-white shadow-lg shadow-primary/30'
-                : 'bg-[#0D1527] text-slate-400 hover:text-white border border-white/10'
-            }`}
-          >
-            All 5 Services
-          </button>
-          {services.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => setActiveTab(s.id)}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
-                activeTab === s.id
-                  ? 'bg-primary text-white shadow-lg shadow-primary/30'
-                  : 'bg-[#0D1527] text-slate-400 hover:text-white border border-white/10'
-              }`}
-            >
-              <span>{s.title.split('&')[0].trim()}</span>
-              {s.id === 'social_media_newbies' && (
-                <span className="px-1.5 py-0.2 text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded uppercase font-bold">
-                  Beginner
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* NexStudio Numbered Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredServices.map((service) => (
-            <div
-              key={service.id}
-              className={`p-7 rounded-3xl bg-[#0D1527] border transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5 hover:shadow-2xl ${
-                service.id === 'social_media_newbies'
-                  ? 'border-amber-500/30 hover:border-amber-500/60 hover:shadow-amber-500/10'
-                  : 'border-white/10 hover:border-primary/50 hover:shadow-primary/20'
-              }`}
-            >
-              <div>
-                {/* Number & Icon Header */}
-                <div className="flex items-center justify-between mb-5">
-                  <span className="font-display font-black text-2xl text-slate-600 group-hover:text-primary transition-colors">
-                    {service.number}
-                  </span>
-                  <div className="w-11 h-11 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    {getServiceIcon(service.id)}
-                  </div>
-                </div>
-
-                {/* Badge if Beginner Incubator */}
-                {service.id === 'social_media_newbies' && (
-                  <div className="mb-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-bold uppercase tracking-wider">
-                    <Sparkles className="w-3 h-3" />
-                    Dedicated Beginner Incubator
-                  </div>
-                )}
-
-                {/* Title & Short Description */}
-                <h3 className="text-xl font-display font-bold text-white mb-2.5 group-hover:text-blue-300 transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-slate-300 text-xs leading-relaxed mb-5">
-                  {service.shortDesc}
-                </p>
-
-                {/* What's Included */}
-                <div className="space-y-2 mb-6 border-t border-white/[0.06] pt-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                    Core Deliverables:
-                  </p>
-                  {service.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start gap-2 text-xs text-slate-300">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                      <span className="leading-snug">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card Footer with Target Metric and Action */}
-              <div className="pt-5 border-t border-white/[0.08] space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-400">Target Outcome:</span>
-                  <span className="font-semibold text-emerald-400">{service.metrics}</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={onOpenBooking}
-                    className="flex-1 py-2.5 px-3 rounded-xl bg-white/[0.05] hover:bg-primary hover:text-white border border-white/10 hover:border-primary text-xs font-semibold text-slate-200 transition-all flex items-center justify-center gap-1.5 group/btn"
-                  >
-                    <span>Get Started</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-primary group-hover/btn:text-white group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                  </button>
-                  <button
-                    onClick={onOpenAudit}
-                    className="py-2.5 px-3 rounded-xl bg-transparent hover:bg-white/[0.06] border border-white/[0.08] text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors"
-                  >
-                    Audit
-                  </button>
-                </div>
-              </div>
+    <section id="services" className="py-16 lg:py-25 bg-white border-t border-gray-100">
+      <div className="max-w-7xl mx-auto px-6">
+        <div>
+          {/* Authentic TailGrids NexStudio Heading */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
+            <div>
+              <p className="text-xs uppercase font-mono tracking-widest text-gray-400 mb-2">
+                Core Capabilities
+              </p>
+              <h2 className="font-normal text-4xl sm:text-5xl text-black -tracking-[1.92px]">
+                Our <span className="italic font-serif">Services</span>
+              </h2>
             </div>
-          ))}
-        </div>
-
-        {/* NexStudio Retainer Callout Banner */}
-        <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-primary/20 via-[#0D1527] to-cyan-950/30 border border-primary/30 backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h4 className="text-lg font-display font-bold text-white">Need a Multi-Channel Customized Growth Retainer?</h4>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
-              Combine SEO, bespoke Web Design, Sales Architecture, Email Flows, and Social Growth under one synchronized studio team.
+            <p className="text-sm font-mono text-gray-500 max-w-sm">
+              Click any service to inspect detailed deliverables, timelines, and measurable outcomes.
             </p>
           </div>
-          <div className="flex items-center gap-3 shrink-0">
-            <button
-              onClick={onOpenBooking}
-              className="px-5 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-lg shadow-primary/30 transition-all flex items-center gap-2"
-            >
-              <span>Build Custom Package</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
+
+          {/* Authentic NexStudio Horizontal Service Rows (Rv) */}
+          <ul className="max-w-[1120px] mx-auto space-y-4">
+            {services.map((item) => {
+              const isExpanded = expandedId === item.id;
+              return (
+                <li
+                  key={item.id}
+                  className={`rounded-2xl transition-all duration-300 border ${
+                    isExpanded
+                      ? 'bg-[#FBFBFB] border-black shadow-xs'
+                      : 'bg-white border-gray-200 hover:border-gray-400'
+                  }`}
+                >
+                  {/* Row Header */}
+                  <div
+                    onClick={() => setExpandedId(isExpanded ? null : item.id)}
+                    className="p-6 sm:p-8 cursor-pointer flex flex-col lg:grid lg:grid-cols-[60px_320px_1fr_40px] lg:items-center gap-4 lg:gap-8"
+                  >
+                    <span className="text-black text-lg italic font-serif">
+                      {item.number}
+                    </span>
+                    <h3 className="font-normal text-2xl text-black tracking-tight">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-600 text-base font-normal leading-relaxed">
+                      {item.shortDesc}
+                    </p>
+                    <div className="flex justify-end">
+                      <div className={`size-8 rounded-full border border-gray-300 flex items-center justify-center transition-transform duration-300 ${isExpanded ? 'rotate-180 bg-black text-white border-black' : 'text-gray-600 hover:border-black'}`}>
+                        <ChevronDown className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Expanded Studio Drawer */}
+                  {isExpanded && (
+                    <div className="px-6 pb-8 sm:px-8 sm:pb-8 pt-2 border-t border-gray-200/80 animate-in fade-in duration-200">
+                      <p className="text-gray-700 text-base leading-relaxed mb-6">
+                        {item.fullDesc}
+                      </p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                        {/* What We Deliver */}
+                        <div>
+                          <h4 className="text-xs uppercase font-mono tracking-wider text-black font-semibold mb-3">
+                            Key Deliverables
+                          </h4>
+                          <ul className="space-y-2">
+                            {item.deliverables.map((del, dIdx) => (
+                              <li key={dIdx} className="flex items-start gap-2.5 text-sm text-gray-700">
+                                <CheckCircle2 className="w-4 h-4 text-black shrink-0 mt-0.5" />
+                                <span>{del}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Outcomes & Timeline */}
+                        <div className="space-y-4">
+                          <div className="p-4 rounded-xl bg-white border border-gray-200">
+                            <p className="text-xs uppercase font-mono tracking-wider text-gray-500">Expected Outcome</p>
+                            <p className="text-lg font-semibold text-black mt-0.5">{item.metrics}</p>
+                          </div>
+
+                          <div className="p-4 rounded-xl bg-white border border-gray-200">
+                            <p className="text-xs uppercase font-mono tracking-wider text-gray-500">Typical Timeline</p>
+                            <p className="text-sm font-medium text-black mt-0.5">{item.timeline}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Bar */}
+                      <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-gray-200">
+                        <span className="text-xs text-gray-500 font-mono">
+                          Ideal For: <span className="text-gray-800 font-sans">{item.idealFor}</span>
+                        </span>
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={onOpenAudit}
+                            className="px-4 py-2 rounded-full border border-gray-300 text-xs font-medium text-black hover:border-black transition-colors cursor-pointer"
+                          >
+                            Request Audit
+                          </button>
+                          <button
+                            onClick={onOpenBooking}
+                            className="group px-5 py-2 rounded-full bg-black text-white text-xs font-medium hover:bg-gray-800 transition-colors flex items-center gap-1.5 cursor-pointer"
+                          >
+                            <span>Book Call</span>
+                            <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
     </section>

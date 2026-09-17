@@ -4,29 +4,35 @@
 
 @layer base {
   body {
-    background-color: #06080F;
-    color: #F1F5F9;
-    font-family: 'Inter', sans-serif;
+    background-color: #FFFFFF;
+    color: #000000;
+    font-family: 'Inter', system-ui, sans-serif;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Authentic NexStudio editorial serif italic styling */
+  .italic, em {
+    font-family: 'Newsreader', 'Instrument Serif', 'Playfair Display', Georgia, serif;
+    font-style: italic;
   }
 }
 
-/* Custom modern scrollbar */
+/* Custom modern minimalist scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #090D15;
+  background: #FFFFFF;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
-  border-radius: 4px;
+  background: #E5E7EB;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #9CA3AF;
 }
 
 /* Glow & Glass Utilities */

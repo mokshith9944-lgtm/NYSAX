@@ -36,94 +36,86 @@ export const AuditModal: React.FC<AuditModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
-      <div className="relative w-full max-w-md rounded-3xl bg-[#0D1220] border border-white/10 shadow-2xl p-6 sm:p-8 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in">
+      <div className="relative w-full max-w-md rounded-[28px] bg-white border border-gray-200 shadow-2xl p-6 sm:p-8 overflow-hidden">
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-1.5 rounded-xl bg-white/[0.05] hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+          className="absolute top-5 right-5 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
 
         {submitted ? (
           <div className="text-center py-6 space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mx-auto text-cyan-400">
+            <div className="size-14 rounded-full bg-black text-white flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-7 h-7" />
             </div>
-            <h3 className="text-xl font-display font-bold text-white">Audit Request Received!</h3>
-            <p className="text-xs text-slate-300">
-              Our growth analysts are evaluating <span className="text-cyan-300 font-medium">{urlOrHandle}</span> across SEO, web speed, and social media hooks. Your 7-point diagnostic PDF will be emailed to <span className="text-purple-300 font-medium">{email}</span> within 24 hours.
+            <h3 className="text-2xl font-normal text-black tracking-tight">Audit Request Received</h3>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Our analysts are evaluating <span className="text-black font-semibold">{urlOrHandle}</span> across SEO, Core Web Vitals speed, and conversion funnels. Your 7-point diagnostic report will be emailed to <span className="text-black font-semibold">{email}</span> within 24 hours.
             </p>
             <button
               onClick={onClose}
-              className="px-6 py-2.5 rounded-xl bg-cyan-600 text-white text-xs font-semibold"
+              className="mt-4 px-6 py-2.5 rounded-full bg-black text-white text-xs uppercase tracking-wider font-medium hover:bg-gray-800 transition-colors cursor-pointer"
             >
               Done
             </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="text-center mb-5">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-[10px] font-bold uppercase tracking-wider mb-2">
-                <Sparkles className="w-3 h-3" />
-                100% Free Diagnostic
-              </div>
-              <h3 className="text-2xl font-display font-bold text-white">
-                Claim Your 7-Point Audit
+            <div className="mb-6">
+              <p className="text-xs uppercase font-mono tracking-widest text-gray-400">
+                Complimentary Diagnostic
+              </p>
+              <h3 className="text-2xl font-normal text-black -tracking-[0.8px] mt-1">
+                Claim Your Free <span className="italic font-serif">7-Point Audit</span>
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
-                We'll audit your SEO keywords, website load speed, mobile CRO, and social media profile.
+              <p className="text-xs text-gray-600 mt-1">
+                We analyze your website, speed, organic search positioning, and social presence with zero obligation.
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Full Name *
-              </label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Your Name *</label>
               <input
                 type="text"
                 required
-                placeholder="Sarah Connor"
+                placeholder="Sarah Jenkins"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:border-cyan-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gray-200 text-black text-xs focus:outline-none focus:border-black"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Website URL or Instagram Handle *
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="https://yourbrand.com or @handle"
-                value={urlOrHandle}
-                onChange={(e) => setUrlOrHandle(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:border-cyan-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Email Address for the Report *
-              </label>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Work Email *</label>
               <input
                 type="email"
                 required
                 placeholder="sarah@yourbrand.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:border-cyan-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gray-200 text-black text-xs focus:outline-none focus:border-black"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Website URL or Instagram Handle *</label>
+              <input
+                type="text"
+                required
+                placeholder="https://yourbrand.com or @yourhandle"
+                value={urlOrHandle}
+                onChange={(e) => setUrlOrHandle(e.target.value)}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gray-200 text-black text-xs focus:outline-none focus:border-black"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs shadow-lg shadow-cyan-600/30 transition-all flex items-center justify-center gap-2 mt-2"
+              className="w-full py-3.5 rounded-full bg-black text-white text-xs uppercase tracking-wider font-medium hover:bg-gray-800 transition-colors shadow-sm cursor-pointer mt-2"
             >
-              <span>Generate My Free Audit Report</span>
-              <ArrowRight className="w-4 h-4" />
+              Generate My Free Audit Report
             </button>
           </form>
         )}

@@ -58,7 +58,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       onSuccess(role);
       onClose();
     } else {
-      setErrorMsg(res.message || 'Login failed. Please check your credentials.');
+      setErrorMsg(res.message || 'Invalid email or password.');
     }
   };
 
@@ -72,9 +72,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       email,
       password,
       role,
-      company,
-      phone,
-      serviceInterest
+      company: company || undefined,
+      phone: phone || undefined,
+      serviceInterest,
     });
     setLoading(false);
 
@@ -93,72 +93,69 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md rounded-3xl bg-[#0C101C] border border-white/10 shadow-2xl p-6 sm:p-8 overflow-hidden">
-        {/* Ambient Top Glow */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-32 bg-purple-600/30 blur-[60px] rounded-full pointer-events-none" />
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-md rounded-[28px] bg-white border border-gray-200 shadow-2xl p-6 sm:p-8 overflow-hidden max-h-[92vh] overflow-y-auto">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-1.5 rounded-xl bg-white/[0.05] hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+          className="absolute top-5 right-5 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="w-14 h-14 rounded-2xl overflow-hidden border border-white/20 p-0.5 mx-auto mb-3 shadow-xl shadow-black/60 bg-black flex items-center justify-center">
-            <img src="/nysax-logo.png" alt="NYSAX Logo" className="w-full h-full object-cover rounded-[14px]" />
+          <div className="w-12 h-12 rounded-xl overflow-hidden border border-black/10 mx-auto mb-3 bg-black flex items-center justify-center p-0.5 shadow-sm">
+            <img src="/nysax-logo.png" alt="NYSAX Logo" className="w-full h-full object-cover rounded-[10px]" />
           </div>
-          <h3 className="text-2xl font-display font-bold text-white tracking-tight">
-            {mode === 'login' ? 'Welcome Back to NYSAX' : 'Create Your NYSAX Account'}
+          <h3 className="text-2xl font-normal text-black -tracking-[0.8px]">
+            {mode === 'login' ? 'Welcome Back' : 'Create an Account'}
           </h3>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-gray-500 mt-1 font-mono">
             {mode === 'login'
-              ? 'Access your Client Portal or Admin Command Center'
-              : 'Join the portal to track campaigns, deliverables & metrics'}
+              ? 'Access your Client Campaign Portal or Admin Dashboard'
+              : 'Join the portal to track campaigns and deliverables'}
           </p>
         </div>
 
         {/* Quick Demo Login Bar */}
         {mode === 'login' && (
-          <div className="mb-6 p-3 rounded-2xl bg-purple-950/30 border border-purple-500/20 space-y-2">
-            <p className="text-[11px] font-semibold text-purple-200 flex items-center gap-1.5">
-              <KeyRound className="w-3.5 h-3.5 text-purple-400" />
-              One-Click Instant Preview:
+          <div className="mb-5 p-3.5 rounded-2xl bg-[#FBFBFB] border border-gray-200 space-y-2">
+            <p className="text-[11px] font-mono uppercase tracking-wider text-gray-500 flex items-center gap-1.5 font-medium">
+              <KeyRound className="w-3.5 h-3.5 text-black" />
+              1-Click Instant Demo Login:
             </p>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => handleQuickLogin('client')}
-                className="py-1.5 px-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/40 border border-purple-500/40 text-purple-200 text-xs font-semibold transition-colors flex items-center justify-center gap-1"
+                className="py-2 px-2 rounded-xl bg-white hover:bg-black hover:text-white border border-gray-200 text-gray-800 text-xs font-medium transition-colors flex items-center justify-center gap-1 cursor-pointer"
               >
-                <UserIcon className="w-3 h-3" /> Client Login
+                <UserIcon className="w-3.5 h-3.5" /> Client Portal
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickLogin('admin')}
-                className="py-1.5 px-2 rounded-xl bg-cyan-600/20 hover:bg-cyan-600/40 border border-cyan-500/40 text-cyan-200 text-xs font-semibold transition-colors flex items-center justify-center gap-1"
+                className="py-2 px-2 rounded-xl bg-white hover:bg-black hover:text-white border border-gray-200 text-gray-800 text-xs font-medium transition-colors flex items-center justify-center gap-1 cursor-pointer"
               >
-                <ShieldCheck className="w-3 h-3" /> Admin Login
+                <ShieldCheck className="w-3.5 h-3.5" /> Admin Portal
               </button>
             </div>
           </div>
         )}
 
         {/* Mode Switcher Tabs */}
-        <div className="flex rounded-xl bg-slate-900/90 border border-slate-800 p-1 mb-5">
+        <div className="flex rounded-full bg-gray-100 p-1 mb-5">
           <button
             type="button"
             onClick={() => {
               setMode('login');
               setErrorMsg('');
             }}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex-1 py-2 rounded-full text-xs font-medium transition-all cursor-pointer ${
               mode === 'login'
-                ? 'bg-purple-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-black text-white shadow-xs'
+                : 'text-gray-600 hover:text-black'
             }`}
           >
             Sign In
@@ -169,10 +166,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               setMode('register');
               setErrorMsg('');
             }}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex-1 py-2 rounded-full text-xs font-medium transition-all cursor-pointer ${
               mode === 'register'
-                ? 'bg-purple-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-black text-white shadow-xs'
+                : 'text-gray-600 hover:text-black'
             }`}
           >
             Create Account
@@ -180,7 +177,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </div>
 
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMsg}</span>
           </div>
@@ -190,35 +187,35 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           /* Login Form */
           <form onSubmit={handleLoginSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-gray-700 mb-1.5">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
                 <input
                   type="email"
                   required
-                  placeholder="admin@nysax.agency or client@brand.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-purple-500"
+                  placeholder="client@brand.com"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-gray-200 text-xs text-black focus:outline-none focus:border-black"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-gray-700 mb-1.5">
                 Password
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
                 <input
                   type="password"
                   required
-                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-purple-500"
+                  placeholder="••••••••"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-gray-200 text-xs text-black focus:outline-none focus:border-black"
                 />
               </div>
             </div>
@@ -226,136 +223,111 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold text-xs shadow-lg shadow-purple-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3.5 rounded-full bg-black text-white text-xs uppercase tracking-wider font-medium hover:bg-gray-800 transition-colors shadow-sm cursor-pointer mt-2 disabled:opacity-50"
             >
-              {loading ? (
-                <span>Authenticating...</span>
-              ) : (
-                <>
-                  <span>Sign In to Dashboard</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
+              {loading ? 'Authenticating...' : 'Sign In to Portal'}
             </button>
           </form>
         ) : (
           /* Registration Form */
           <form onSubmit={handleRegisterSubmit} className="space-y-3.5">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-gray-700 mb-1">
                 Full Name *
               </label>
-              <div className="relative">
-                <UserIcon className="w-4 h-4 text-slate-500 absolute left-3.5 top-2.5" />
-                <input
-                  type="text"
-                  required
-                  placeholder="Elena Rostova"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-purple-500"
-                />
-              </div>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Alex Morgan"
+                className="w-full px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-xs text-black focus:outline-none focus:border-black"
+              />
             </div>
 
-            <div className="grid grid-cols-2 gap-2.5">
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="name@company.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-purple-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">
-                  Password *
-                </label>
-                <input
-                  type="password"
-                  required
-                  placeholder="Min 6 characters"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-purple-500"
-                />
-              </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                Work Email *
+              </label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="alex@company.com"
+                className="w-full px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-xs text-black focus:outline-none focus:border-black"
+              />
             </div>
 
-            <div className="grid grid-cols-2 gap-2.5">
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                Password *
+              </label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Minimum 6 characters"
+                className="w-full px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-xs text-black focus:outline-none focus:border-black"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">
-                  Brand / Company
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Company / Brand
                 </label>
                 <input
                   type="text"
-                  placeholder="Aura Skincare"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-purple-500"
+                  placeholder="Morgan Media"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-xs text-black focus:outline-none focus:border-black"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">
-                  Role Type
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Account Type
                 </label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value as UserRole)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs focus:outline-none focus:border-purple-500"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-xs text-black focus:outline-none focus:border-black cursor-pointer"
                 >
-                  <option value="client">Client Account</option>
-                  <option value="admin">Agency Admin</option>
+                  <option value="client">Client User</option>
+                  <option value="admin">Administrator</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                Primary Service Interest
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                Service Interest
               </label>
               <select
                 value={serviceInterest}
                 onChange={(e) => setServiceInterest(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-white text-xs focus:outline-none focus:border-purple-500"
+                className="w-full px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-xs text-black focus:outline-none focus:border-black cursor-pointer"
               >
                 <option value="SEO Optimization">SEO Optimization</option>
                 <option value="Website Design">Website Design</option>
                 <option value="Sales Strategy">Sales Strategy</option>
                 <option value="Email Marketing">Email Marketing</option>
-                <option value="Newbies in Social Media Marketing">Newbies in Social Media Marketing</option>
-                <option value="Multi-Service Retainer">Multi-Service Retainer</option>
+                <option value="Newbies in Social Media Marketing">Newbies in Social Media</option>
               </select>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold text-xs shadow-lg shadow-purple-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+              className="w-full py-3.5 rounded-full bg-black text-white text-xs uppercase tracking-wider font-medium hover:bg-gray-800 transition-colors shadow-sm cursor-pointer mt-2 disabled:opacity-50"
             >
-              {loading ? (
-                <span>Creating Account in Database...</span>
-              ) : (
-                <>
-                  <span>Create Account & Enter Portal</span>
-                  <CheckCircle2 className="w-4 h-4" />
-                </>
-              )}
+              {loading ? 'Creating Account...' : 'Complete Registration'}
             </button>
           </form>
         )}
-
-        {/* Footer Note */}
-        <p className="text-[11px] text-center text-slate-500 mt-4">
-          All client information is stored securely with end-to-end data encryption.
-        </p>
       </div>
     </div>
   );

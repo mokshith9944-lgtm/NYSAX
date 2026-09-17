@@ -12,43 +12,42 @@ export default {
         'dark-card': '#0D1527',
         'dark-border': 'rgba(255, 255, 255, 0.08)',
         primary: {
-          DEFAULT: '#3758F9',
-          hover: '#2945D8',
-          light: '#EAEFFF',
-          dark: '#1B31A8'
-        },
-        accent: {
-          cyan: '#06B6D4',
-          purple: '#8B5CF6',
-          amber: '#F59E0B',
-          emerald: '#10B981'
-        },
-        surface: {
-          50: '#151F36',
-          100: '#0F172A',
-          200: '#0B1120',
-          300: '#070C18',
-        },
-        brand: {
+          DEFAULT: '#000000',
+          hover: '#1F1F1F',
           blue: '#3758F9',
-          purple: '#8B5CF6',
-          violet: '#7C3AED',
-          cyan: '#06B6D4',
-          accent: '#EC4899',
-          glow: '#3758F9'
+        },
+        nex: {
+          black: '#070707',
+          card: '#0D0D0D',
+          border: '#1F1F1F',
+          muted: '#6B7280',
+          light: '#FBFBFB',
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        display: ['Space Grotesk', 'Inter', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        serif: ['Newsreader', 'Instrument Serif', 'Playfair Display', 'Georgia', 'serif'],
+        mono: ['Anonymous Pro', 'Space Mono', 'ui-monospace', 'monospace'],
+      },
+      spacing: {
+        '25': '6.25rem',
+        '30': '7.5rem',
+        '4.5': '1.125rem',
+      },
+      borderRadius: {
+        '4xl': '2rem',
+        '5xl': '2.5rem',
       },
       animation: {
+        'infinite-scroll': 'infinite-scroll 35s linear infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'float': 'float 6s ease-in-out infinite',
-        'glow': 'glow 3s ease-in-out infinite alternate',
-        'shimmer': 'shimmer 2.5s linear infinite',
       },
       keyframes: {
+        'infinite-scroll': {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-10px)' },

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { AboutSection } from './components/AboutSection';
+import { WhyPartner } from './components/WhyPartner';
 import { Services } from './components/Services';
 import { RoiCalculator } from './components/RoiCalculator';
 import { CaseStudies } from './components/CaseStudies';
@@ -44,7 +46,7 @@ const MainApp: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#06080F] text-slate-100 flex flex-col selection:bg-purple-500/30 selection:text-purple-200">
+    <div className="min-h-screen bg-white text-black flex flex-col selection:bg-black selection:text-white">
       {/* Top Navbar */}
       <Navbar
         onOpenAuth={handleOpenAuth}
@@ -62,6 +64,10 @@ const MainApp: React.FC = () => {
               onOpenBooking={() => setBookingModalOpen(true)}
               onOpenAudit={() => setAuditModalOpen(true)}
             />
+            <AboutSection
+              onOpenBooking={() => setBookingModalOpen(true)}
+            />
+            <WhyPartner />
             <Services
               onOpenBooking={() => setBookingModalOpen(true)}
               onOpenAudit={() => setAuditModalOpen(true)}
