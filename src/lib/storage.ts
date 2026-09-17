@@ -1,0 +1,357 @@
+import { User, Lead, Project, SupportTicket } from '../types';
+
+const USERS_KEY = 'nysax_users_db_v1';
+const LEADS_KEY = 'nysax_leads_db_v1';
+const PROJECTS_KEY = 'nysax_projects_db_v1';
+const TICKETS_KEY = 'nysax_tickets_db_v1';
+const CURRENT_USER_KEY = 'nysax_current_user_v1';
+
+// Initial seed data for admin and sample clients
+const INITIAL_USERS: User[] = [
+  {
+    id: 'user_admin_01',
+    name: 'NYSAX Executive Admin',
+    email: 'admin@nysax.agency',
+    password: 'admin123',
+    role: 'admin',
+    company: 'NYSAX Growth Systems',
+    phone: '+1 (555) 019-8234',
+    serviceInterest: 'Agency Operations',
+    createdAt: new Date(Date.now() - 30 * 86400000).toISOString(),
+    lastLogin: new Date().toISOString(),
+  },
+  {
+    id: 'user_client_01',
+    name: 'Sarah Jenkins',
+    email: 'client@brand.com',
+    password: 'client123',
+    role: 'client',
+    company: 'Aura Luxe Skincare',
+    website: 'https://auraluxe.example.com',
+    phone: '+1 (555) 349-9210',
+    serviceInterest: 'Email Marketing & Retention',
+    createdAt: new Date(Date.now() - 14 * 86400000).toISOString(),
+    lastLogin: new Date(Date.now() - 3600000).toISOString(),
+  },
+  {
+    id: 'user_client_02',
+    name: 'David Thorne',
+    email: 'david@thorneapp.com',
+    password: 'password123',
+    role: 'client',
+    company: 'Thorne AI SaaS',
+    website: 'https://thorneapp.com',
+    phone: '+1 (555) 892-1049',
+    serviceInterest: 'SEO Optimization & Sales Strategy',
+    createdAt: new Date(Date.now() - 7 * 86400000).toISOString(),
+    lastLogin: new Date(Date.now() - 86400000).toISOString(),
+  }
+];
+
+const INITIAL_LEADS: Lead[] = [
+  {
+    id: 'lead_01',
+    name: 'Marcus Vance',
+    email: 'marcus@vancecapital.io',
+    service: 'SEO Optimization',
+    budget: '$3,000 - $5,000/mo',
+    websiteOrHandle: 'https://vancecapital.io',
+    message: 'Looking to dominate high-intent finance keywords and rank #1 nationally.',
+    source: 'contact_form',
+    status: 'new',
+    createdAt: new Date(Date.now() - 2 * 3600000).toISOString(),
+  },
+  {
+    id: 'lead_02',
+    name: 'Elena Rostova',
+    email: 'elena@glowstudio.co',
+    service: 'Newbies in Social Media Marketing',
+    budget: '$1,500 - $3,000/mo',
+    websiteOrHandle: '@glowstudio.official',
+    message: 'We are completely new to Instagram reels and TikTok. Need complete zero-to-hero branding and content strategy.',
+    source: 'chat_agent',
+    status: 'contacted',
+    createdAt: new Date(Date.now() - 6 * 3600000).toISOString(),
+  },
+  {
+    id: 'lead_03',
+    name: 'Liam Zhang',
+    email: 'liam@nexusgear.shop',
+    service: 'Email Marketing & Retention',
+    budget: '$5,000+/mo',
+    websiteOrHandle: 'https://nexusgear.shop',
+    message: 'Need 10 automated Klaviyo flows built from scratch for our DTC storefront.',
+    source: 'strategy_booking',
+    status: 'in_review',
+    createdAt: new Date(Date.now() - 24 * 3600000).toISOString(),
+  }
+];
+
+const INITIAL_PROJECTS: Project[] = [
+  {
+    id: 'proj_01',
+    clientId: 'user_client_01',
+    clientName: 'Sarah Jenkins',
+    clientEmail: 'client@brand.com',
+    title: 'Aura Luxe - Full Klaviyo Lifecycle & Retention Automation',
+    serviceCategory: 'email_marketing',
+    status: 'in_progress',
+    progress: 68,
+    startDate: '2026-08-20',
+    targetDate: '2026-10-01',
+    deliverables: [
+      { id: 'del_1', title: 'Customer Persona & Lifecycle Mapping', completed: true },
+      { id: 'del_2', title: 'High-Converting Welcome Series (4 Emails)', completed: true },
+      { id: 'del_3', title: 'Cart & Browse Abandonment Sequences', completed: true },
+      { id: 'del_4', title: 'Post-Purchase Cross-Sell & VIP Flows', completed: false, dueDate: '2026-09-25' },
+      { id: 'del_5', title: 'A/B Testing Subject Lines & Send-Time Optimization', completed: false, dueDate: '2026-10-01' }
+    ],
+    updates: [
+      {
+        id: 'up_1',
+        date: '2026-09-14',
+        author: 'NYSAX Account Lead',
+        text: 'Welcome flow open rates hit 54.2% with a 4.1% placed-order rate in test phase.'
+      },
+      {
+        id: 'up_2',
+        date: '2026-09-08',
+        author: 'NYSAX Copywriting Team',
+        text: 'Completed email copy and branded design templates. Awaiting client review.'
+      }
+    ]
+  },
+  {
+    id: 'proj_02',
+    clientId: 'user_client_02',
+    clientName: 'David Thorne',
+    clientEmail: 'david@thorneapp.com',
+    title: 'Thorne AI - Enterprise SEO Dominance & High-Intent Backlinks',
+    serviceCategory: 'seo',
+    status: 'in_progress',
+    progress: 42,
+    startDate: '2026-09-01',
+    targetDate: '2026-11-15',
+    deliverables: [
+      { id: 'del_10', title: 'Core Web Vitals & Technical Speed Optimization', completed: true },
+      { id: 'del_11', title: 'Competitive Keyword Gap Matrix (50 High-Intent Terms)', completed: true },
+      { id: 'del_12', title: 'Topic Cluster Silos & Programmatic Pillar Pages', completed: false, dueDate: '2026-09-30' },
+      { id: 'del_13', title: 'Tier-1 Authority Guest Posts & PR Backlinks', completed: false, dueDate: '2026-10-20' }
+    ],
+    updates: [
+      {
+        id: 'up_10',
+        date: '2026-09-12',
+        author: 'NYSAX SEO Strategist',
+        text: 'Fixed 42 crawl depth errors and improved Google PageSpeed score from 48 to 96.'
+      }
+    ]
+  }
+];
+
+const INITIAL_TICKETS: SupportTicket[] = [
+  {
+    id: 'tick_01',
+    clientId: 'user_client_01',
+    clientName: 'Sarah Jenkins',
+    subject: 'Adding SMS Abandonment Integration to Klaviyo',
+    category: 'Feature Request',
+    priority: 'medium',
+    status: 'open',
+    createdAt: new Date(Date.now() - 18 * 3600000).toISOString(),
+    messages: [
+      {
+        id: 'msg_1',
+        sender: 'Sarah Jenkins',
+        text: 'Hi team, can we also incorporate SMS marketing with Attentive/Klaviyo SMS into our abandonment flow?',
+        createdAt: new Date(Date.now() - 18 * 3600000).toISOString(),
+        isAdmin: false,
+      },
+      {
+        id: 'msg_2',
+        sender: 'NYSAX Admin',
+        text: 'Absolutely Sarah! We are configuring the TCPA compliant opt-in banner right now and will sync it with your cart flow.',
+        createdAt: new Date(Date.now() - 14 * 3600000).toISOString(),
+        isAdmin: true,
+      }
+    ]
+  }
+];
+
+// Helper functions for safe local persistence
+export const db = {
+  // Users
+  getUsers: (): User[] => {
+    try {
+      const data = localStorage.getItem(USERS_KEY);
+      if (!data) {
+        localStorage.setItem(USERS_KEY, JSON.stringify(INITIAL_USERS));
+        return INITIAL_USERS;
+      }
+      return JSON.parse(data);
+    } catch {
+      return INITIAL_USERS;
+    }
+  },
+
+  saveUser: (user: User): void => {
+    const users = db.getUsers();
+    const existingIndex = users.findIndex(u => u.id === user.id || u.email.toLowerCase() === user.email.toLowerCase());
+    if (existingIndex >= 0) {
+      users[existingIndex] = { ...users[existingIndex], ...user };
+    } else {
+      users.push(user);
+    }
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    window.dispatchEvent(new Event('nysax_storage_update'));
+  },
+
+  findUserByEmail: (email: string): User | undefined => {
+    const users = db.getUsers();
+    return users.find(u => u.email.toLowerCase() === email.toLowerCase().trim());
+  },
+
+  // Leads
+  getLeads: (): Lead[] => {
+    try {
+      const data = localStorage.getItem(LEADS_KEY);
+      if (!data) {
+        localStorage.setItem(LEADS_KEY, JSON.stringify(INITIAL_LEADS));
+        return INITIAL_LEADS;
+      }
+      return JSON.parse(data);
+    } catch {
+      return INITIAL_LEADS;
+    }
+  },
+
+  saveLead: (lead: Omit<Lead, 'id' | 'createdAt'> & { id?: string; createdAt?: string }): Lead => {
+    const leads = db.getLeads();
+    const newLead: Lead = {
+      id: lead.id || `lead_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+      createdAt: lead.createdAt || new Date().toISOString(),
+      name: lead.name,
+      email: lead.email,
+      service: lead.service,
+      budget: lead.budget,
+      websiteOrHandle: lead.websiteOrHandle,
+      message: lead.message,
+      source: lead.source,
+      status: lead.status || 'new',
+    };
+    leads.unshift(newLead);
+    localStorage.setItem(LEADS_KEY, JSON.stringify(leads));
+    window.dispatchEvent(new Event('nysax_storage_update'));
+    return newLead;
+  },
+
+  updateLeadStatus: (leadId: string, status: Lead['status']): void => {
+    const leads = db.getLeads();
+    const index = leads.findIndex(l => l.id === leadId);
+    if (index >= 0) {
+      leads[index].status = status;
+      localStorage.setItem(LEADS_KEY, JSON.stringify(leads));
+      window.dispatchEvent(new Event('nysax_storage_update'));
+    }
+  },
+
+  // Projects
+  getProjects: (): Project[] => {
+    try {
+      const data = localStorage.getItem(PROJECTS_KEY);
+      if (!data) {
+        localStorage.setItem(PROJECTS_KEY, JSON.stringify(INITIAL_PROJECTS));
+        return INITIAL_PROJECTS;
+      }
+      return JSON.parse(data);
+    } catch {
+      return INITIAL_PROJECTS;
+    }
+  },
+
+  getProjectsByClient: (clientId: string): Project[] => {
+    const all = db.getProjects();
+    return all.filter(p => p.clientId === clientId);
+  },
+
+  saveProject: (project: Project): void => {
+    const projects = db.getProjects();
+    const index = projects.findIndex(p => p.id === project.id);
+    if (index >= 0) {
+      projects[index] = project;
+    } else {
+      projects.unshift(project);
+    }
+    localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
+    window.dispatchEvent(new Event('nysax_storage_update'));
+  },
+
+  // Tickets
+  getTickets: (): SupportTicket[] => {
+    try {
+      const data = localStorage.getItem(TICKETS_KEY);
+      if (!data) {
+        localStorage.setItem(TICKETS_KEY, JSON.stringify(INITIAL_TICKETS));
+        return INITIAL_TICKETS;
+      }
+      return JSON.parse(data);
+    } catch {
+      return INITIAL_TICKETS;
+    }
+  },
+
+  getTicketsByClient: (clientId: string): SupportTicket[] => {
+    const tickets = db.getTickets();
+    return tickets.filter(t => t.clientId === clientId);
+  },
+
+  saveTicket: (ticket: SupportTicket): void => {
+    const tickets = db.getTickets();
+    const index = tickets.findIndex(t => t.id === ticket.id);
+    if (index >= 0) {
+      tickets[index] = ticket;
+    } else {
+      tickets.unshift(ticket);
+    }
+    localStorage.setItem(TICKETS_KEY, JSON.stringify(tickets));
+    window.dispatchEvent(new Event('nysax_storage_update'));
+  },
+
+  // Current session
+  getCurrentUser: (): User | null => {
+    try {
+      const data = localStorage.getItem(CURRENT_USER_KEY);
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  },
+
+  setCurrentUser: (user: User | null): void => {
+    if (user) {
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(CURRENT_USER_KEY);
+    }
+    window.dispatchEvent(new Event('nysax_auth_change'));
+  },
+
+  // Export DB for backup or inspection
+  exportDatabaseJSON: (): string => {
+    return JSON.stringify({
+      users: db.getUsers(),
+      leads: db.getLeads(),
+      projects: db.getProjects(),
+      tickets: db.getTickets(),
+      exportedAt: new Date().toISOString(),
+    }, null, 2);
+  },
+
+  resetDatabase: (): void => {
+    localStorage.setItem(USERS_KEY, JSON.stringify(INITIAL_USERS));
+    localStorage.setItem(LEADS_KEY, JSON.stringify(INITIAL_LEADS));
+    localStorage.setItem(PROJECTS_KEY, JSON.stringify(INITIAL_PROJECTS));
+    localStorage.setItem(TICKETS_KEY, JSON.stringify(INITIAL_TICKETS));
+    window.dispatchEvent(new Event('nysax_storage_update'));
+  }
+};
