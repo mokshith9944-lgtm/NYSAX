@@ -22,7 +22,7 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const { name, email, selectedDate, selectedTime, service, websiteOrHandle } = req.body || {};
+    const { name, email, selectedDate, selectedTime, service, websiteOrHandle, timezone, region, currency } = req.body || {};
 
     if (!name || !email) {
       return res.status(400).json({
@@ -47,12 +47,14 @@ export default async function handler(req: any, res: any) {
           from: senderEmail,
           to: [agencyInbox],
           reply_to: email,
-          subject: `[Consultation Booked] ${name} (${selectedDate} @ ${selectedTime})`,
+          subject: `[Consultation Booked] ${name} (${selectedDate} @ ${selectedTime} ${timezone || ''})`,
           text: `NEW STRATEGY CONSULTATION BOOKED\n\n` +
                 `Client: ${name}\n` +
                 `Email: ${email}\n` +
                 `Selected Date: ${selectedDate}\n` +
                 `Selected Time: ${selectedTime}\n` +
+                `Region & Timezone: ${region || 'Not specified'} (${timezone || 'Standard'})\n` +
+                `Preferred Currency: ${currency || 'USD'}\n` +
                 `Primary Focus: ${service || 'Growth Strategy'}\n` +
                 `Website / Handle: ${websiteOrHandle || 'Not provided'}\n\n` +
                 `Timestamp: ${new Date().toISOString()}`,

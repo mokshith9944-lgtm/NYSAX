@@ -25,3 +25,5 @@ website main demo/
 *.sw?
 .env
 .env.local
+.vercel
+.env*
