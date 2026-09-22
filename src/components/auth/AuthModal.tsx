@@ -10,10 +10,10 @@ import {
   ArrowRight, 
   CheckCircle2, 
   AlertCircle,
-  Sparkles,
-  KeyRound
+  Sparkles
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { ADMIN_EMAIL } from '../../lib/storage';
 import { UserRole } from '../../types';
 
 interface AuthModalProps {
@@ -28,21 +28,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
   initialMode = 'login',
-  initialRole = 'client',
   onSuccess
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
-  const [role, setRole] = useState<UserRole>(initialRole);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
-  const [serviceInterest, setServiceInterest] = useState('SEO Optimization');
+  const [serviceInterest, setServiceInterest] = useState('Performance Marketing & Paid Acquisition');
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login, register, quickDemoLogin } = useAuth();
+  const { login, register } = useAuth();
 
   if (!isOpen) return null;
 
@@ -51,11 +49,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setErrorMsg('');
     setLoading(true);
 
-    const res = await login(email, password);
+    const cleanEmail = email.trim().toLowerCase();
+    const res = await login(cleanEmail, password);
     setLoading(false);
 
     if (res.success) {
-      onSuccess(role);
+      const isOfficialAdmin = cleanEmail === ADMIN_EMAIL.toLowerCase();
+      onSuccess(isOfficialAdmin ? 'admin' : 'client');
       onClose();
     } else {
       setErrorMsg(res.message || 'Invalid email or password.');
@@ -67,11 +67,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setErrorMsg('');
     setLoading(true);
 
+    const cleanEmail = email.trim().toLowerCase();
     const res = await register({
       name,
-      email,
+      email: cleanEmail,
       password,
-      role,
       company: company || undefined,
       phone: phone || undefined,
       serviceInterest,
@@ -79,17 +79,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setLoading(false);
 
     if (res.success) {
-      onSuccess(role);
+      const isOfficialAdmin = cleanEmail === ADMIN_EMAIL.toLowerCase();
+      onSuccess(isOfficialAdmin ? 'admin' : 'client');
       onClose();
     } else {
       setErrorMsg(res.message || 'Registration failed.');
     }
-  };
-
-  const handleQuickLogin = (demoRole: UserRole) => {
-    quickDemoLogin(demoRole);
-    onSuccess(demoRole);
-    onClose();
   };
 
   return (
@@ -120,32 +115,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               : 'Register credentials to track campaign deliverables and performance.'}
           </p>
         </div>
-
-        {/* Quick Demo Login Bar */}
-        {mode === 'login' && (
-          <div className="mb-5 p-3.5 rounded-none bg-neutral-50 border border-neutral-300 space-y-2">
-            <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-600 flex items-center gap-1.5 font-medium">
-              <KeyRound className="w-3.5 h-3.5 text-black" />
-              Instant Sandbox Access:
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('client')}
-                className="py-2 px-2 rounded-none bg-white hover:bg-black hover:text-white border border-neutral-300 text-black text-[11px] font-mono uppercase tracking-wider transition-colors flex items-center justify-center gap-1 cursor-pointer"
-              >
-                <UserIcon className="w-3.5 h-3.5" /> Client Portal
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('admin')}
-                className="py-2 px-2 rounded-none bg-white hover:bg-black hover:text-white border border-neutral-300 text-black text-[11px] font-mono uppercase tracking-wider transition-colors flex items-center justify-center gap-1 cursor-pointer"
-              >
-                <ShieldCheck className="w-3.5 h-3.5" /> Admin Suite
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Mode Switcher Tabs */}
         <div className="flex rounded-none bg-neutral-100 p-1 mb-5 border border-neutral-300">
@@ -292,16 +261,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
               <div>
                 <label className="block text-[10px] font-mono uppercase tracking-widest text-neutral-700 mb-1">
-                  Account Type
+                  Phone (Optional)
                 </label>
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value as UserRole)}
-                  className="w-full px-3.5 py-2 rounded-none bg-neutral-50 border border-neutral-300 text-xs text-black font-mono focus:outline-none focus:border-black cursor-pointer"
-                >
-                  <option value="client">Client User</option>
-                  <option value="admin">Administrator</option>
-                </select>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+1 (555) 000-0000"
+                  className="w-full px-3.5 py-2 rounded-none bg-neutral-50 border border-neutral-300 text-xs text-black font-mono focus:outline-none focus:border-black"
+                />
               </div>
             </div>
 

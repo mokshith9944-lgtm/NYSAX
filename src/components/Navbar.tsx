@@ -32,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [userDropdownOpen, setUserDropdownOpen] = useState(false)
-  const { user, isAuthenticated, isAdmin, logout, quickDemoLogin } = useAuth()
+  const { user, isAuthenticated, isAdmin, logout } = useAuth()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -136,26 +136,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <InstagramIcon size={16} className="w-4 h-4" />
             </a>
           </div>
-
-          {/* Quick Demo Selector */}
-          {!isAuthenticated && (
-            <div className="flex items-center gap-2 border border-white/10 bg-obsidian-850 px-2.5 py-1 text-[10px] uppercase font-mono tracking-wider text-silver-400">
-              <span className="text-silver-500">Demo:</span>
-              <button
-                onClick={() => quickDemoLogin('client')}
-                className="hover:text-olive-400 transition-colors cursor-pointer underline"
-              >
-                Client
-              </button>
-              <span>/</span>
-              <button
-                onClick={() => quickDemoLogin('admin')}
-                className="hover:text-olive-400 transition-colors cursor-pointer underline"
-              >
-                Admin
-              </button>
-            </div>
-          )}
 
           {/* User Auth or Sign In */}
           {isAuthenticated && user ? (

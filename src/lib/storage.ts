@@ -7,18 +7,20 @@ const TICKETS_KEY = 'nysax_tickets_db_v1';
 const REVIEWS_KEY = 'nysax_reviews_db_v1';
 const CURRENT_USER_KEY = 'nysax_current_user_v1';
 
+export const ADMIN_EMAIL = 'nysaxofficial@gmail.com';
+
 // Initial seed data for admin and sample clients
 const INITIAL_USERS: User[] = [
   {
     id: 'user_admin_01',
-    name: 'NYSAX Executive Admin',
-    email: 'admin@nysax.agency',
-    password: 'admin123',
+    name: 'NYSAX Executive Command',
+    email: ADMIN_EMAIL,
+    password: 'admin',
     role: 'admin',
-    company: 'NYSAX Growth Systems',
-    phone: '+1 (555) 019-8234',
-    serviceInterest: 'Agency Operations',
-    createdAt: new Date(Date.now() - 30 * 86400000).toISOString(),
+    company: 'NYSAX Agency Command',
+    phone: '+91 99440 00000',
+    serviceInterest: 'Executive Operations',
+    createdAt: new Date().toISOString(),
     lastLogin: new Date().toISOString(),
   },
   {
@@ -185,31 +187,93 @@ export const db = {
   getUsers: (): User[] => {
     try {
       const data = localStorage.getItem(USERS_KEY);
-      if (!data) {
-        localStorage.setItem(USERS_KEY, JSON.stringify(INITIAL_USERS));
-        return INITIAL_USERS;
+      let users: User[] = data ? JSON.parse(data) : INITIAL_USERS;
+
+      // Filter out deprecated admin accounts
+      users = users.filter(u => u.email.toLowerCase() !== 'admin@nysax.agency');
+
+      // Ensure nysaxofficial@gmail.com is present as executive admin
+      const hasAdmin = users.some(u => u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+      if (!hasAdmin) {
+        users.unshift({
+          id: 'user_admin_01',
+          name: 'NYSAX Executive Command',
+          email: ADMIN_EMAIL,
+          password: 'admin',
+          role: 'admin',
+          company: 'NYSAX Agency Command',
+          phone: '+91 99440 00000',
+          serviceInterest: 'Executive Operations',
+          createdAt: new Date().toISOString(),
+          lastLogin: new Date().toISOString(),
+        });
       }
-      return JSON.parse(data);
+
+      // Enforce: ONLY nysaxofficial@gmail.com has admin role; all others are client
+      users = users.map(u => {
+        const isOfficialAdmin = u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+        return {
+          ...u,
+          role: isOfficialAdmin ? ('admin' as const) : ('client' as const)
+        };
+      });
+
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+      return users;
     } catch {
       return INITIAL_USERS;
     }
   },
 
   saveUser: (user: User): void => {
+    const cleanEmail = user.email.toLowerCase().trim();
+    const isOfficialAdmin = cleanEmail === ADMIN_EMAIL.toLowerCase();
+    const userToSave: User = {
+      ...user,
+      email: cleanEmail,
+      role: isOfficialAdmin ? 'admin' : 'client'
+    };
+
     const users = db.getUsers();
-    const existingIndex = users.findIndex(u => u.id === user.id || u.email.toLowerCase() === user.email.toLowerCase());
+    const existingIndex = users.findIndex(u => u.id === userToSave.id || u.email.toLowerCase() === cleanEmail);
     if (existingIndex >= 0) {
-      users[existingIndex] = { ...users[existingIndex], ...user };
+      users[existingIndex] = { ...users[existingIndex], ...userToSave };
     } else {
-      users.push(user);
+      users.push(userToSave);
     }
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
     window.dispatchEvent(new Event('nysax_storage_update'));
   },
 
   findUserByEmail: (email: string): User | undefined => {
+    const clean = email.toLowerCase().trim();
     const users = db.getUsers();
-    return users.find(u => u.email.toLowerCase() === email.toLowerCase().trim());
+    let found = users.find(u => u.email.toLowerCase() === clean);
+
+    if (!found && clean === ADMIN_EMAIL.toLowerCase()) {
+      const adminUser: User = {
+        id: 'user_admin_01',
+        name: 'NYSAX Executive Command',
+        email: ADMIN_EMAIL,
+        password: 'admin',
+        role: 'admin',
+        company: 'NYSAX Agency Command',
+        phone: '+91 99440 00000',
+        serviceInterest: 'Executive Operations',
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+      };
+      db.saveUser(adminUser);
+      return adminUser;
+    }
+
+    if (found) {
+      return {
+        ...found,
+        role: clean === ADMIN_EMAIL.toLowerCase() ? 'admin' : 'client'
+      };
+    }
+    return undefined;
   },
 
   // Leads
@@ -322,7 +386,13 @@ export const db = {
   getCurrentUser: (): User | null => {
     try {
       const data = localStorage.getItem(CURRENT_USER_KEY);
-      return data ? JSON.parse(data) : null;
+      if (!data) return null;
+      const user: User = JSON.parse(data);
+      const isOfficialAdmin = user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase();
+      return {
+        ...user,
+        role: isOfficialAdmin ? 'admin' : 'client'
+      };
     } catch {
       return null;
     }

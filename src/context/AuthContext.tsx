@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, UserRole } from '../types';
-import { db } from '../lib/storage';
+import { db, ADMIN_EMAIL } from '../lib/storage';
 
 interface RegisterData {
   name: string;
@@ -20,7 +20,7 @@ interface AuthContextType {
   login: (email: string, password?: string) => Promise<{ success: boolean; message?: string }>;
   register: (data: RegisterData) => Promise<{ success: boolean; message?: string }>;
   logout: () => void;
-  quickDemoLogin: (role: UserRole) => void;
+  quickDemoLogin?: (role: UserRole) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,17 +42,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const login = async (email: string, password?: string): Promise<{ success: boolean; message?: string }> => {
-    const foundUser = db.findUserByEmail(email);
+    const cleanEmail = email.trim().toLowerCase();
+    const foundUser = db.findUserByEmail(cleanEmail);
     if (!foundUser) {
-      return { success: false, message: 'Account not found with this email. Please check your spelling or register.' };
+      return { success: false, message: 'Account not found with this email. Please register to create your account.' };
     }
 
     if (password && foundUser.password && foundUser.password !== password) {
-      return { success: false, message: 'Invalid password. Try again or use one-click demo login.' };
+      return { success: false, message: 'Invalid credentials. Please re-enter your password.' };
     }
 
-    const updatedUser = {
+    const assignedRole: UserRole = cleanEmail === ADMIN_EMAIL.toLowerCase() ? 'admin' : 'client';
+    const updatedUser: User = {
       ...foundUser,
+      role: assignedRole,
       lastLogin: new Date().toISOString()
     };
     db.saveUser(updatedUser);
@@ -62,17 +65,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const register = async (data: RegisterData): Promise<{ success: boolean; message?: string }> => {
-    const existing = db.findUserByEmail(data.email);
+    const cleanEmail = data.email.trim().toLowerCase();
+    const existing = db.findUserByEmail(cleanEmail);
     if (existing) {
       return { success: false, message: 'An account with this email address already exists. Please log in.' };
     }
 
+    // Strictly enforce: ONLY nysaxofficial@gmail.com is admin, all other emails are clients
+    const assignedRole: UserRole = cleanEmail === ADMIN_EMAIL.toLowerCase() ? 'admin' : 'client';
+
     const newUser: User = {
       id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
       name: data.name,
-      email: data.email.trim(),
+      email: cleanEmail,
       password: data.password,
-      role: data.role || 'client',
+      role: assignedRole,
       company: data.company || '',
       website: data.website || '',
       phone: data.phone || '',
@@ -83,7 +90,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     db.saveUser(newUser);
 
-    // If client selected a service, automatically create their first onboarding project placeholder
+    // If client registered, automatically initialize their onboarding project workspace
     if (newUser.role === 'client') {
       db.saveProject({
         id: `proj_${Date.now()}`,
@@ -105,8 +112,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           {
             id: 'up_init_1',
             date: new Date().toISOString().split('T')[0],
-            author: 'NYSAX Welcome Bot',
-            text: 'Account created! Your dedicated account strategist will reach out within 4 business hours.'
+            author: 'NYSAX Welcome Desk',
+            text: 'Account created! Your dedicated account strategist will review your campaign roadmap within 4 business hours.'
           }
         ]
       });
@@ -122,24 +129,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUser(null);
   };
 
-  const quickDemoLogin = (role: UserRole) => {
-    if (role === 'admin') {
-      login('admin@nysax.agency', 'admin123');
-    } else {
-      login('client@brand.com', 'client123');
-    }
-  };
-
   return (
     <AuthContext.Provider
       value={{
         user,
         isAuthenticated: !!user,
-        isAdmin: user?.role === 'admin',
+        isAdmin: user?.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase(),
         login,
         register,
         logout,
-        quickDemoLogin,
       }}
     >
       {children}

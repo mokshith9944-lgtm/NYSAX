@@ -21,7 +21,7 @@ import {
   X
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { db } from '../../lib/storage';
+import { db, ADMIN_EMAIL } from '../../lib/storage';
 import { User, Lead, Project, ClientReview } from '../../types';
 
 interface AdminDashboardProps {
@@ -374,12 +374,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToHome }) 
                         {new Date(u.createdAt).toLocaleDateString()}
                       </td>
                       <td className="py-4 px-5 text-right">
-                        <button
-                          onClick={() => handleToggleUserRole(u)}
-                          className="px-3.5 py-1 rounded-none bg-neutral-900 hover:bg-white hover:text-black text-white text-xs font-mono uppercase tracking-widest border border-neutral-700 transition-colors cursor-pointer"
-                        >
-                          Convert to {u.role === 'admin' ? 'Client' : 'Admin'}
-                        </button>
+                        {u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? (
+                          <span className="px-3 py-1 bg-olive-600/20 text-olive-400 border border-olive-500/30 text-[10px] font-mono uppercase tracking-widest">
+                            Official Executive Admin
+                          </span>
+                        ) : (
+                          <span className="px-3 py-1 bg-neutral-900 text-silver-400 border border-neutral-800 text-[10px] font-mono uppercase tracking-widest">
+                            Client Account
+                          </span>
+                        )}
                       </td>
                     </tr>
                   ))}
