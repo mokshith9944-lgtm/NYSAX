@@ -50,7 +50,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [statusMsg, setStatusMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login, register, loginWithGoogle, sendEmailOtp, verifyEmailOtp } = useAuth();
+  const { login, register, loginWithGoogle, sendEmailOtp, verifyEmailOtp, resetPassword } = useAuth();
 
   useEffect(() => {
     let interval: any;
@@ -69,72 +69,44 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setOtpStep('request');
   };
 
-  // Google Sign-In Handler
+  // Google 1-Click Sign-In via Google Identity & Firebase
   const handleGoogleSignIn = async () => {
     setErrorMsg('');
+    setStatusMsg('');
     setLoading(true);
 
     try {
-      // Check if Google Client SDK is loaded
-      const googleClientId = (import.meta as any).env?.VITE_GOOGLE_CLIENT_ID;
-      if (typeof window !== 'undefined' && (window as any).google?.accounts?.id && googleClientId) {
-        (window as any).google.accounts.id.initialize({
-          client_id: googleClientId,
-          callback: async (response: any) => {
-            try {
-              // Decode base64 JWT payload
-              const base64Url = response.credential.split('.')[1];
-              const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-              const jsonPayload = decodeURIComponent(
-                atob(base64)
-                  .split('')
-                  .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-                  .join('')
-              );
-              const payload = JSON.parse(jsonPayload);
+      const res = await loginWithGoogle();
+      setLoading(false);
 
-              const res = await loginWithGoogle({
-                name: payload.name || payload.email.split('@')[0],
-                email: payload.email,
-                picture: payload.picture,
-              });
-
-              setLoading(false);
-              onSuccess(res.role);
-              onClose();
-            } catch (err: any) {
-              setLoading(false);
-              setErrorMsg('Failed to process Google authentication response.');
-            }
-          },
-        });
-
-        (window as any).google.accounts.id.prompt();
-      } else {
-        // Direct Google Account Entry Flow (Instant and always works without GCP console delay)
-        const promptEmail = window.prompt(
-          'NYSAX Google Identity Bridge:\nEnter your Google Account email to continue with Google:',
-          email || 'client@google.com'
-        );
-
-        if (!promptEmail || !promptEmail.includes('@')) {
-          setLoading(false);
-          return;
-        }
-
-        const cleanEmail = promptEmail.trim().toLowerCase();
-        const res = await loginWithGoogle({
-          name: cleanEmail.split('@')[0],
-          email: cleanEmail,
-        });
-
-        setLoading(false);
+      if (res.success) {
         onSuccess(res.role);
         onClose();
+      } else {
+        setErrorMsg(res.message || 'Google authentication was not completed.');
       }
     } catch (err: any) {
       setLoading(false);
-      setErrorMsg('Google authentication encountered an unexpected error.');
+      setErrorMsg(err.message || 'Google authentication encountered an unexpected error.');
+    }
+  };
+
+  // Google Password Reset Email Handler
+  const handleForgotPassword = async () => {
+    if (!email || !email.includes('@')) {
+      setErrorMsg('Please enter your email address above first to receive password recovery.');
+      return;
+    }
+    setErrorMsg('');
+    setStatusMsg('Dispatching password reset link from Google...');
+    setLoading(true);
+    const res = await resetPassword(email);
+    setLoading(false);
+    if (res.success) {
+      setStatusMsg(res.message || 'Check your inbox for password reset instructions from Google.');
+    } else {
+      setErrorMsg(res.message || 'Failed to dispatch password recovery email.');
+      setStatusMsg('');
     }
   };
 
@@ -409,6 +381,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     placeholder="••••••••"
                     className="w-full pl-10 pr-4 py-2 rounded-none bg-neutral-50 border border-neutral-300 text-xs text-black font-mono focus:outline-none focus:border-black"
                   />
+                </div>
+                <div className="flex justify-end mt-1">
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 hover:text-black hover:underline cursor-pointer"
+                  >
+                    Forgot password?
+                  </button>
                 </div>
               </div>
 

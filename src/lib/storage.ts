@@ -1,10 +1,12 @@
 import { User, Lead, Project, SupportTicket, ClientReview } from '../types';
+import { db as firestore, doc, setDoc, getDocs, collection } from './firebase';
 
 const USERS_KEY = 'nysax_users_db_v1';
 const LEADS_KEY = 'nysax_leads_db_v1';
 const PROJECTS_KEY = 'nysax_projects_db_v1';
 const TICKETS_KEY = 'nysax_tickets_db_v1';
 const REVIEWS_KEY = 'nysax_reviews_db_v1';
+const BOOKINGS_KEY = 'nysax_bookings_db_v1';
 const CURRENT_USER_KEY = 'nysax_current_user_v1';
 
 export const ADMIN_EMAIL = 'nysaxofficial@gmail.com';
@@ -243,6 +245,11 @@ export const db = {
     }
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
     window.dispatchEvent(new Event('nysax_storage_update'));
+
+    // Google Cloud Firestore Sync
+    try {
+      setDoc(doc(firestore, 'users', userToSave.id), userToSave, { merge: true }).catch(() => {});
+    } catch (e) {}
   },
 
   findUserByEmail: (email: string): User | undefined => {
@@ -307,6 +314,12 @@ export const db = {
     leads.unshift(newLead);
     localStorage.setItem(LEADS_KEY, JSON.stringify(leads));
     window.dispatchEvent(new Event('nysax_storage_update'));
+
+    // Google Cloud Firestore Sync
+    try {
+      setDoc(doc(firestore, 'leads', newLead.id), newLead, { merge: true }).catch(() => {});
+    } catch (e) {}
+
     return newLead;
   },
 
@@ -317,6 +330,10 @@ export const db = {
       leads[index].status = status;
       localStorage.setItem(LEADS_KEY, JSON.stringify(leads));
       window.dispatchEvent(new Event('nysax_storage_update'));
+
+      try {
+        setDoc(doc(firestore, 'leads', leadId), { status }, { merge: true }).catch(() => {});
+      } catch (e) {}
     }
   },
 
@@ -334,9 +351,10 @@ export const db = {
     }
   },
 
-  getProjectsByClient: (clientId: string): Project[] => {
+  getProjectsByClient: (clientId: string, clientEmail?: string): Project[] => {
     const all = db.getProjects();
-    return all.filter(p => p.clientId === clientId);
+    const cleanEmail = clientEmail?.toLowerCase().trim();
+    return all.filter(p => p.clientId === clientId || (cleanEmail && p.clientEmail && p.clientEmail.toLowerCase() === cleanEmail));
   },
 
   saveProject: (project: Project): void => {
@@ -349,6 +367,91 @@ export const db = {
     }
     localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
     window.dispatchEvent(new Event('nysax_storage_update'));
+
+    // Google Cloud Firestore Sync
+    try {
+      setDoc(doc(firestore, 'projects', project.id), project, { merge: true }).catch(() => {});
+    } catch (e) {}
+  },
+
+  // Bookings (persisted directly to Google Cloud Firestore)
+  getBookings: (): any[] => {
+    try {
+      const data = localStorage.getItem(BOOKINGS_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch {
+      return [];
+    }
+  },
+
+  saveBooking: async (bookingData: any): Promise<void> => {
+    const bookingId = `book_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`;
+    const fullBooking = {
+      id: bookingId,
+      ...bookingData,
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      const existing = db.getBookings();
+      existing.unshift(fullBooking);
+      localStorage.setItem(BOOKINGS_KEY, JSON.stringify(existing));
+      window.dispatchEvent(new Event('nysax_storage_update'));
+    } catch (e) {}
+
+    // Google Cloud Firestore Sync
+    try {
+      await setDoc(doc(firestore, 'bookings', bookingId), fullBooking, { merge: true });
+    } catch (e) {
+      console.warn('[Firestore booking write notice]:', e);
+    }
+  },
+
+  // Background Cloud Sync
+  syncWithFirestore: async (): Promise<void> => {
+    try {
+      const [usersSnap, projectsSnap, leadsSnap] = await Promise.allSettled([
+        getDocs(collection(firestore, 'users')),
+        getDocs(collection(firestore, 'projects')),
+        getDocs(collection(firestore, 'leads')),
+      ]);
+
+      if (usersSnap.status === 'fulfilled' && !usersSnap.value.empty) {
+        const cloudUsers = usersSnap.value.docs.map((d) => d.data() as User);
+        const currentUsers = db.getUsers();
+        const mergedUsers = [...currentUsers];
+        cloudUsers.forEach((cu) => {
+          const idx = mergedUsers.findIndex(
+            (lu) => lu.id === cu.id || lu.email.toLowerCase() === cu.email.toLowerCase()
+          );
+          if (idx >= 0) {
+            mergedUsers[idx] = { ...mergedUsers[idx], ...cu };
+          } else {
+            mergedUsers.push(cu);
+          }
+        });
+        localStorage.setItem(USERS_KEY, JSON.stringify(mergedUsers));
+      }
+
+      if (projectsSnap.status === 'fulfilled' && !projectsSnap.value.empty) {
+        const cloudProjects = projectsSnap.value.docs.map((d) => d.data() as Project);
+        const currentProjects = db.getProjects();
+        const mergedProjects = [...currentProjects];
+        cloudProjects.forEach((cp) => {
+          const idx = mergedProjects.findIndex((lp) => lp.id === cp.id);
+          if (idx >= 0) {
+            mergedProjects[idx] = { ...mergedProjects[idx], ...cp };
+          } else {
+            mergedProjects.unshift(cp);
+          }
+        });
+        localStorage.setItem(PROJECTS_KEY, JSON.stringify(mergedProjects));
+      }
+
+      window.dispatchEvent(new Event('nysax_storage_update'));
+    } catch (err) {
+      console.warn('[Firestore sync notice]:', err);
+    }
   },
 
   // Tickets

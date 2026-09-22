@@ -37,14 +37,14 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onBackToHome, onOpen
 
   useEffect(() => {
     if (!user) return;
-    const clientProjects = db.getProjectsByClient(user.id);
+    const clientProjects = db.getProjectsByClient(user.id, user.email);
     const clientTickets = db.getTicketsByClient(user.id);
 
     setProjects(clientProjects);
     setTickets(clientTickets);
 
     const handleStorageUpdate = () => {
-      setProjects(db.getProjectsByClient(user.id));
+      setProjects(db.getProjectsByClient(user.id, user.email));
       setTickets(db.getTicketsByClient(user.id));
     };
 

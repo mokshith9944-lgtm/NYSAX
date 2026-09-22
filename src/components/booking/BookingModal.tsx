@@ -47,27 +47,32 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
       })
 
       // 2. Dispatch to /api/appointment (Resend Dual Dispatch to mokshith9944@gmail.com)
+      const bookingData = {
+        name: name.trim(),
+        email: email.trim(),
+        selectedDate,
+        selectedTime,
+        timezone: selectedRegion.timezone,
+        region: selectedRegion.country,
+        currency: selectedRegion.currency,
+        service,
+        websiteOrHandle: websiteOrHandle.trim(),
+      };
+
+      // Persist to Google Cloud Firestore & local storage
+      db.saveBooking(bookingData);
+
       try {
         await fetch('/api/appointment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: name.trim(),
-            email: email.trim(),
-            selectedDate,
-            selectedTime,
-            timezone: selectedRegion.timezone,
-            region: selectedRegion.country,
-            currency: selectedRegion.currency,
-            service,
-            websiteOrHandle: websiteOrHandle.trim(),
-          }),
-        })
+          body: JSON.stringify(bookingData),
+        });
       } catch (err) {
-        console.warn('Appointment serverless API fallback:', err)
+        console.warn('Appointment serverless API fallback:', err);
       }
 
-      setSubmitted(true)
+      setSubmitted(true);
     } catch (err) {
       console.error('Booking submission error:', err)
     } finally {

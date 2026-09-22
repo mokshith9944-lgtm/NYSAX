@@ -30,6 +30,7 @@ import { AuditModal } from './components/audit/AuditModal'
 import { ClientPortal } from './components/portal/ClientPortal'
 import { AdminDashboard } from './components/admin/AdminDashboard'
 import { UserRole } from './types'
+import { db } from './lib/storage'
 import PortalFieldCollection from './components/effects/PortalFieldCollection'
 
 const MainApp: React.FC = () => {
@@ -42,6 +43,11 @@ const MainApp: React.FC = () => {
   const [authInitialRole, setAuthInitialRole] = useState<UserRole>('client')
   const [bookingModalOpen, setBookingModalOpen] = useState(false)
   const [auditModalOpen, setAuditModalOpen] = useState(false)
+
+  // Cloud Firestore synchronization on mount
+  useEffect(() => {
+    db.syncWithFirestore();
+  }, []);
 
   // Sync state from URL pathname
   useEffect(() => {
