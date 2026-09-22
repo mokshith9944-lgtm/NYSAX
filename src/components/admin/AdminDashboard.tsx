@@ -37,6 +37,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToHome }) 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'leads' | 'users' | 'projects' | 'reviews'>('leads');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [dispatchingEmail, setDispatchingEmail] = useState<string | null>(null);
+  const [emailNotificationMsg, setEmailNotificationMsg] = useState<string | null>(null);
+  const [broadcastNotes, setBroadcastNotes] = useState<Record<string, string>>({});
 
   const refreshData = () => {
     setUsers(db.getUsers());
@@ -56,10 +59,102 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToHome }) 
     refreshData();
   };
 
-  const handleToggleUserRole = (targetUser: User) => {
-    const updatedRole = targetUser.role === 'admin' ? 'client' : 'admin';
-    db.saveUser({ ...targetUser, role: updatedRole });
+  const handleToggleDeliverable = async (proj: Project, delId: string) => {
+    const updatedDeliverables = proj.deliverables.map((d) => {
+      if (d.id === delId) return { ...d, completed: !d.completed };
+      return d;
+    });
+
+    const completedCount = updatedDeliverables.filter((d) => d.completed).length;
+    const newProgress = Math.round((completedCount / updatedDeliverables.length) * 100);
+
+    const updatedProj: Project = {
+      ...proj,
+      deliverables: updatedDeliverables,
+      progress: newProgress,
+      status: newProgress === 100 ? 'completed' : 'in_progress',
+    };
+
+    db.saveProject(updatedProj);
     refreshData();
+
+    const targetDel = updatedDeliverables.find((d) => d.id === delId);
+    if (targetDel && targetDel.completed) {
+      setDispatchingEmail(proj.id);
+      setEmailNotificationMsg(`Transmitting automated milestone update to ${proj.clientEmail}...`);
+      try {
+        await fetch('/api/notify-project', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            clientEmail: proj.clientEmail,
+            clientName: proj.clientName,
+            projectTitle: proj.title,
+            updateType: 'deliverable_completed',
+            deliverableTitle: targetDel.title,
+            progress: newProgress,
+          }),
+        });
+        setEmailNotificationMsg(`✓ Milestone update email dispatched to ${proj.clientEmail}`);
+      } catch (e) {
+        setEmailNotificationMsg(`Failed to send automated email update to ${proj.clientEmail}`);
+      } finally {
+        setDispatchingEmail(null);
+        setTimeout(() => setEmailNotificationMsg(null), 5000);
+      }
+    }
+  };
+
+  const handleSendProjectBroadcast = async (proj: Project) => {
+    const note = (broadcastNotes[proj.id] || '').trim();
+    if (!note) return;
+
+    setDispatchingEmail(proj.id);
+    setEmailNotificationMsg(`Transmitting status dispatch to ${proj.clientEmail}...`);
+
+    const newUpdate = {
+      id: `up_${Date.now()}`,
+      date: new Date().toISOString().split('T')[0],
+      author: 'NYSAX Leadership Desk',
+      text: note,
+    };
+
+    const updatedProj: Project = {
+      ...proj,
+      updates: [newUpdate, ...(proj.updates || [])],
+    };
+
+    db.saveProject(updatedProj);
+    setBroadcastNotes((prev) => ({ ...prev, [proj.id]: '' }));
+    refreshData();
+
+    try {
+      await fetch('/api/notify-project', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientEmail: proj.clientEmail,
+          clientName: proj.clientName,
+          projectTitle: proj.title,
+          updateType: 'status_announcement',
+          message: note,
+          progress: proj.progress,
+        }),
+      });
+      setEmailNotificationMsg(`✓ Status update email dispatched to ${proj.clientEmail}`);
+    } catch (e) {
+      setEmailNotificationMsg(`Failed to send email to ${proj.clientEmail}`);
+    } finally {
+      setDispatchingEmail(null);
+      setTimeout(() => setEmailNotificationMsg(null), 5000);
+    }
+  };
+
+  const handleToggleUserRole = (targetUser: User) => {
+    if (targetUser.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+      alert('Only nysaxofficial@gmail.com is designated as Executive Administrator.');
+      return;
+    }
   };
 
   const handleUpdateReviewStatus = (reviewId: string, newStatus: 'pending' | 'approved' | 'rejected') => {
@@ -392,33 +487,136 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToHome }) 
           </div>
         )}
 
+        {/* Global Dispatch Notification Banner */}
+        {emailNotificationMsg && (
+          <div className="p-4 bg-olive-950/80 border border-olive-500 text-white text-xs font-mono flex items-center justify-between animate-in fade-in duration-200 shadow-[0_0_20px_rgba(112,130,56,0.25)]">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-olive-400 animate-pulse" />
+              <span>{emailNotificationMsg}</span>
+            </div>
+            <button
+              onClick={() => setEmailNotificationMsg(null)}
+              className="text-silver-400 hover:text-white text-xs"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
         {/* Tab 3: Projects Table */}
         {activeTab === 'projects' && (
-          <div className="space-y-4">
-            {projects.map((proj) => (
-              <div
-                key={proj.id}
-                className="p-6 rounded-none bg-neutral-950/80 border border-neutral-800 flex flex-col md:flex-row md:items-center justify-between gap-4"
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="px-2 py-0.5 rounded-none bg-neutral-900 border border-neutral-800 text-white text-[10px] font-mono uppercase tracking-wider">
-                      {proj.serviceCategory}
-                    </span>
-                    <span className="text-xs text-neutral-400 font-mono">Client: {proj.clientName} ({proj.clientEmail})</span>
-                  </div>
-                  <h4 className="text-base font-normal uppercase tracking-wide text-white">{proj.title}</h4>
-                  <p className="text-xs text-neutral-500 font-mono mt-1">Timeline: {proj.startDate} to {proj.targetDate}</p>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <span className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest">Status</span>
-                    <p className="text-sm font-mono text-white capitalize">{proj.status.replace('_', ' ')} ({proj.progress}%)</p>
-                  </div>
-                </div>
+          <div className="space-y-6">
+            {projects.length === 0 ? (
+              <div className="p-12 rounded-none bg-neutral-950/80 border border-neutral-800 text-center text-xs text-neutral-500 font-mono">
+                No active projects registered yet.
               </div>
-            ))}
+            ) : (
+              projects.map((proj) => (
+                <div
+                  key={proj.id}
+                  className="p-6 rounded-none bg-neutral-950/80 border border-neutral-800 space-y-6"
+                >
+                  {/* Project Header */}
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-900 pb-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="px-2 py-0.5 rounded-none bg-neutral-900 border border-neutral-800 text-white text-[10px] font-mono uppercase tracking-wider">
+                          {proj.serviceCategory}
+                        </span>
+                        <span className="text-xs text-neutral-400 font-mono">
+                          Client: <strong className="text-white">{proj.clientName}</strong> ({proj.clientEmail})
+                        </span>
+                      </div>
+                      <h4 className="text-lg font-normal uppercase tracking-wide text-white">{proj.title}</h4>
+                      <p className="text-xs text-neutral-500 font-mono mt-1">
+                        Timeline: {proj.startDate} to {proj.targetDate}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                      <div>
+                        <span className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest block">Status</span>
+                        <p className="text-sm font-mono text-white capitalize">{proj.status.replace('_', ' ')}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] text-neutral-500 font-mono uppercase tracking-widest block">Progress</span>
+                        <p className="text-lg font-mono font-bold text-olive-400">{proj.progress}%</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Deliverables Checklist (Auto-Triggers Client Email on Completion) */}
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-xs font-mono uppercase tracking-wider text-neutral-300 flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-olive-400" />
+                        <span>Sprint Deliverables & Milestones (Click to Complete & Notify)</span>
+                      </p>
+                      <span className="text-[10px] font-mono text-neutral-500">
+                        {proj.deliverables.filter(d => d.completed).length} / {proj.deliverables.length} Completed
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                      {proj.deliverables.map((del) => (
+                        <button
+                          key={del.id}
+                          type="button"
+                          disabled={dispatchingEmail === proj.id}
+                          onClick={() => handleToggleDeliverable(proj, del.id)}
+                          className={`p-3 text-left rounded-none border transition-all cursor-pointer flex items-start gap-2.5 ${
+                            del.completed
+                              ? 'bg-olive-950/40 border-olive-500/60 text-white'
+                              : 'bg-neutral-900/50 border-neutral-800 text-neutral-400 hover:border-neutral-700 hover:text-white'
+                          }`}
+                        >
+                          <div className={`w-4 h-4 mt-0.5 rounded-none border flex items-center justify-center shrink-0 ${
+                            del.completed ? 'bg-olive-600 border-olive-500 text-black' : 'border-neutral-600'
+                          }`}>
+                            {del.completed && <Check className="w-3 h-3 stroke-[3]" />}
+                          </div>
+                          <div className="text-xs font-mono leading-snug">
+                            <span className={del.completed ? 'line-through text-silver-400' : 'text-white'}>
+                              {del.title}
+                            </span>
+                            {del.completed && (
+                              <span className="block text-[9px] uppercase tracking-widest text-olive-400 mt-1">
+                                Verified & Notified
+                              </span>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Broadcast Update Email to Client */}
+                  <div className="pt-3 border-t border-neutral-900">
+                    <label className="block text-[10px] font-mono uppercase tracking-widest text-neutral-400 mb-2">
+                      Broadcast Transactional Update Email to {proj.clientEmail}
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="e.g. Meta Ads campaign scaled to 4.2x ROAS; new ad set deployed..."
+                        value={broadcastNotes[proj.id] || ''}
+                        onChange={(e) => setBroadcastNotes((prev) => ({ ...prev, [proj.id]: e.target.value }))}
+                        className="flex-1 px-3.5 py-2 rounded-none bg-neutral-900 border border-neutral-800 text-xs font-mono text-white focus:outline-none focus:border-olive-500"
+                      />
+                      <button
+                        type="button"
+                        disabled={dispatchingEmail === proj.id || !(broadcastNotes[proj.id] || '').trim()}
+                        onClick={() => handleSendProjectBroadcast(proj)}
+                        className="px-4 py-2 bg-olive-600 text-black font-mono text-xs uppercase font-bold tracking-wider hover:bg-olive-500 transition-colors disabled:opacity-50 cursor-pointer shrink-0 flex items-center gap-1.5"
+                      >
+                        <Mail className="w-3.5 h-3.5" />
+                        <span>{dispatchingEmail === proj.id ? 'Sending...' : 'Dispatch Email'}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
 
