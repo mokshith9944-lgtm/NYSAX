@@ -3,131 +3,103 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --cursor-x: 0px;
+    --cursor-y: 0px;
+    --color-black: #000000;
+    --color-silver: #c5c8d0;
+    --color-olive: #708238;
+    --color-white: #ffffff;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #000000;
+  }
+
   body {
-    background-color: #FFFFFF;
+    background-color: #000000;
+    color: #c5c8d0;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #708238;
     color: #000000;
-    font-family: 'Inter', system-ui, sans-serif;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', system-ui, sans-serif;
   }
 
-  /* Authentic NexStudio editorial serif italic styling */
-  .italic, em {
-    font-family: 'Newsreader', 'Instrument Serif', 'Playfair Display', Georgia, serif;
-    font-style: italic;
+  /* Sleek luxury scrollbar */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #050505;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #708238;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9bb355;
   }
 }
 
-/* Custom modern minimalist scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #FFFFFF;
-}
-::-webkit-scrollbar-thumb {
-  background: #E5E7EB;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #9CA3AF;
-}
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 
-/* Glow & Glass Utilities */
-.glass-panel {
-  background: rgba(17, 22, 34, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
+  .text-stroke {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.7);
+    color: transparent;
+  }
 
-.glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.glass-panel-hover:hover {
-  border-color: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.2);
-  transform: translateY(-2px);
-}
+  .text-stroke-olive {
+    -webkit-text-stroke: 1px #708238;
+    color: transparent;
+  }
 
-.glow-gradient {
-  background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 100%);
-}
+  .text-stroke-silver {
+    -webkit-text-stroke: 1px #c5c8d0;
+    color: transparent;
+  }
 
-.text-gradient {
-  background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #94A3B8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+  .grain {
+    position: relative;
+  }
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+  }
 
-.text-gradient-purple {
-  background: linear-gradient(135deg, #C084FC 0%, #8B5CF6 50%, #38BDF8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+  .clip-diagonal {
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
+  }
 
-/* NexStudio TailGrids styling tokens */
-.nex-card {
-  background-color: #0D1527;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.nex-card:hover {
-  border-color: rgba(55, 88, 249, 0.5);
-  box-shadow: 0 12px 36px -10px rgba(55, 88, 249, 0.2);
-  transform: translateY(-3px);
-}
+  .metallic-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.008) 100%), #08080a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
 
-.nex-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: rgba(55, 88, 249, 0.1);
-  border: 1px solid rgba(55, 88, 249, 0.3);
-  color: #93C5FD;
-}
+  .metallic-card:hover {
+    border-color: rgba(112, 130, 56, 0.4);
+    box-shadow: 0 12px 30px -10px rgba(112, 130, 56, 0.15);
+  }
 
-.nex-badge-dot {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 9999px;
-  background-color: #3758F9;
-  box-shadow: 0 0 8px #3758F9;
-}
+  .silver-gradient-text {
+    background: linear-gradient(180deg, #ffffff 0%, #c5c8d0 60%, #8e929d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-.nex-button-primary {
-  background: linear-gradient(135deg, #3758F9 0%, #4F46E5 100%);
-  color: white;
-  transition: all 0.25s ease;
-}
-.nex-button-primary:hover {
-  background: linear-gradient(135deg, #2945D8 0%, #4338CA 100%);
-  box-shadow: 0 8px 24px -6px rgba(55, 88, 249, 0.5);
-  transform: translateY(-1px);
-}
-
-/* Subtle background grid pattern */
-.bg-grid-pattern {
-  background-size: 48px 48px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-}
-
-/* Radial ambient lighting */
-.radial-glow-top {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1000px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 80%);
-  pointer-events: none;
+  .olive-gradient-text {
+    background: linear-gradient(180deg, #a3b86c 0%, #708238 60%, #52602b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 }

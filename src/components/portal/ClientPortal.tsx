@@ -107,14 +107,14 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onBackToHome, onOpen
           <div className="flex items-center gap-3">
             <button
               onClick={onOpenBooking}
-              className="px-5 py-2.5 rounded-none bg-white text-black text-xs font-mono uppercase tracking-widest hover:bg-neutral-200 transition-all flex items-center gap-2 cursor-pointer border border-white"
+              className="px-5 py-2.5 rounded-none bg-olive-600 text-black text-xs font-mono uppercase font-bold tracking-widest hover:bg-olive-500 transition-all flex items-center gap-2 cursor-pointer border border-olive-500"
             >
               <Calendar className="w-3.5 h-3.5" />
               <span>Schedule Consultation</span>
             </button>
             <button
               onClick={logout}
-              className="p-2.5 rounded-none bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-800 transition-colors cursor-pointer"
+              className="p-2.5 rounded-none bg-obsidian-850 hover:bg-white/10 text-silver-400 hover:text-white border border-white/10 transition-colors cursor-pointer"
               title="Sign Out"
             >
               <LogOut className="w-4 h-4" />
@@ -123,13 +123,13 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onBackToHome, onOpen
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex rounded-none bg-neutral-950 border border-neutral-800 p-1 max-w-md">
+        <div className="flex rounded-none bg-obsidian-900 border border-white/10 p-1 max-w-md">
           <button
             onClick={() => setActiveTab('campaigns')}
             className={`flex-1 py-2 rounded-none text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTab === 'campaigns'
-                ? 'bg-white text-black'
-                : 'text-neutral-400 hover:text-white'
+                ? 'bg-olive-600 text-black font-bold'
+                : 'text-silver-400 hover:text-white'
             }`}
           >
             <LayoutDashboard className="w-3.5 h-3.5" />
@@ -139,8 +139,8 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onBackToHome, onOpen
             onClick={() => setActiveTab('tickets')}
             className={`flex-1 py-2 rounded-none text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTab === 'tickets'
-                ? 'bg-white text-black'
-                : 'text-neutral-400 hover:text-white'
+                ? 'bg-olive-600 text-black font-bold'
+                : 'text-silver-400 hover:text-white'
             }`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
@@ -150,8 +150,8 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ onBackToHome, onOpen
             onClick={() => setActiveTab('assets')}
             className={`flex-1 py-2 rounded-none text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
               activeTab === 'assets'
-                ? 'bg-white text-black'
-                : 'text-neutral-400 hover:text-white'
+                ? 'bg-olive-600 text-black font-bold'
+                : 'text-silver-400 hover:text-white'
             }`}
           >
             <FolderDown className="w-3.5 h-3.5" />

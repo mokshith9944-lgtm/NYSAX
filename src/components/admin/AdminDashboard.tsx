@@ -183,11 +183,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToHome }) 
 
         {/* Tab Selection & Search Filters */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex rounded-none bg-neutral-950 border border-neutral-800 p-1 max-w-xl">
+          <div className="flex rounded-none bg-obsidian-900 border border-white/10 p-1 max-w-xl">
             <button
               onClick={() => setActiveTab('leads')}
               className={`px-4 py-2 rounded-none text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
-                activeTab === 'leads' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'
+                activeTab === 'leads' ? 'bg-olive-600 text-black font-bold' : 'text-silver-400 hover:text-white'
               }`}
             >
               CRM Leads ({leads.length})
@@ -195,7 +195,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToHome }) 
             <button
               onClick={() => setActiveTab('users')}
               className={`px-4 py-2 rounded-none text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
-                activeTab === 'users' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'
+                activeTab === 'users' ? 'bg-olive-600 text-black font-bold' : 'text-silver-400 hover:text-white'
               }`}
             >
               Accounts ({users.length})
@@ -203,7 +203,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToHome }) 
             <button
               onClick={() => setActiveTab('projects')}
               className={`px-4 py-2 rounded-none text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
-                activeTab === 'projects' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'
+                activeTab === 'projects' ? 'bg-olive-600 text-black font-bold' : 'text-silver-400 hover:text-white'
               }`}
             >
               Projects ({projects.length})
@@ -211,7 +211,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onBackToHome }) 
             <button
               onClick={() => setActiveTab('reviews')}
               className={`px-4 py-2 rounded-none text-xs font-mono uppercase tracking-wider transition-all cursor-pointer ${
-                activeTab === 'reviews' ? 'bg-white text-black' : 'text-neutral-400 hover:text-white'
+                activeTab === 'reviews' ? 'bg-olive-600 text-black font-bold' : 'text-silver-400 hover:text-white'
               }`}
             >
               Feedback ({reviews.length}) {pendingReviewsCount > 0 && `• ${pendingReviewsCount}`}

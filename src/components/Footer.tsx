@@ -1,179 +1,163 @@
-import React from 'react';
-import { Mail } from 'lucide-react';
-import { Logo } from './brand/Logo';
-import { InstagramIcon } from './icons/InstagramIcon';
-import { useAuth } from '../context/AuthContext';
+import React from 'react'
+import { Mail, ArrowUpRight } from 'lucide-react'
+import { Logo } from './brand/Logo'
+import { InstagramIcon } from './icons/InstagramIcon'
+import { useAuth } from '../context/AuthContext'
 
 interface FooterProps {
-  onOpenAuth: (initialMode?: 'login' | 'register', initialRole?: 'client' | 'admin') => void;
-  onOpenBooking: () => void;
-  onOpenAudit: () => void;
-  setCurrentView: (view: 'home' | 'client_portal' | 'admin_dashboard') => void;
+  onOpenAuth: (initialMode?: 'login' | 'register', initialRole?: 'client' | 'admin') => void
+  onOpenBooking: () => void
+  onOpenAudit: () => void
+  setCurrentView: (view: 'home' | 'client_portal' | 'admin_dashboard') => void
 }
 
 export const Footer: React.FC<FooterProps> = ({
   onOpenAuth,
   onOpenBooking,
-  onOpenAudit,
   setCurrentView,
 }) => {
-  const currentYear = new Date().getFullYear();
-  const { isAuthenticated, isAdmin } = useAuth();
+  const currentYear = new Date().getFullYear()
+  const { isAuthenticated, isAdmin } = useAuth()
 
   const navigateTo = (view: 'home' | 'client_portal' | 'admin_dashboard') => {
-    setCurrentView(view);
-    const targetPath = view === 'home' ? '/' : view === 'client_portal' ? '/portal/client' : '/admin';
+    setCurrentView(view)
+    const targetPath = view === 'home' ? '/' : view === 'client_portal' ? '/portal/client' : '/admin'
     if (window.location.pathname !== targetPath) {
-      window.history.pushState({}, '', targetPath);
+      window.history.pushState({}, '', targetPath)
     }
-  };
+  }
 
   return (
-    <footer className="bg-black text-white border-t border-neutral-800">
-      <div className="pt-16 pb-12">
-        <div className="max-w-7xl mx-auto px-6">
-          {/* Top Logo & Direct Touchpoints */}
-          <div className="mb-14 flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-10 border-b border-neutral-800">
-            <Logo size="lg" variant="dark" subtext="High-Fashion Editorial Growth Studio" />
-            
+    <footer className="bg-black text-silver-300 border-t border-white/10 pt-20 pb-10" id="contact">
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        {/* Top Header Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-white/10">
+          {/* Brand & Manifesto */}
+          <div className="lg:col-span-5 flex flex-col justify-between">
+            <div>
+              <div className="mb-6">
+                <Logo size="md" variant="dark" subtext="Growth & Digital Architecture" />
+              </div>
+              <p className="font-body text-silver-400 text-sm max-w-sm leading-relaxed mb-6">
+                We don't build generic websites. We engineer high-velocity digital futures that compound enterprise authority.
+              </p>
+            </div>
+
             <div className="flex items-center gap-3">
               <a
                 href="mailto:contact@nysaagency.com?subject=[Project%20Inquiry]%20Nysa%20Agency"
-                className="p-2.5 border border-neutral-700 text-white hover:border-white hover:bg-white hover:text-black transition-colors"
+                className="p-2.5 border border-white/10 text-silver-300 hover:text-white hover:border-olive-400 transition-colors"
                 title="Direct Mail: contact@nysaagency.com"
                 aria-label="Direct Mail Access"
               >
-                <Mail className="w-[18px] h-[18px]" strokeWidth={1.5} />
+                <Mail size={16} />
               </a>
               <a
                 href="https://www.instagram.com/nysax.agency?stkn=MXdycDVzN3lqc2tqZA=="
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 border border-neutral-700 text-white hover:border-white hover:bg-white hover:text-black transition-colors"
+                className="p-2.5 border border-white/10 text-silver-300 hover:text-white hover:border-olive-400 transition-colors"
                 title="Official Instagram (@nysax.agency)"
                 aria-label="Instagram"
               >
-                <InstagramIcon size={18} className="w-[18px] h-[18px] text-current" />
+                <InstagramIcon size={16} className="w-4 h-4" />
               </a>
               <button
                 onClick={onOpenBooking}
-                className="px-5 py-2.5 bg-white text-black text-xs font-mono uppercase tracking-widest border border-white hover:bg-neutral-200 transition-colors cursor-pointer"
+                className="px-4 py-2.5 bg-olive-600 text-black text-xs font-mono uppercase font-bold tracking-widest hover:bg-olive-500 transition-colors cursor-pointer"
               >
                 Schedule Consultation
               </button>
             </div>
           </div>
 
-          {/* 4-Column Editorial Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 justify-between gap-12 pb-14">
-            {/* Col 1: Core Services */}
-            <div>
-              <h4 className="font-mono text-xs uppercase tracking-widest text-neutral-400 mb-6 font-medium">
-                Disciplines
-              </h4>
-              <ul className="space-y-3 font-mono text-xs tracking-wider text-neutral-400 [&>li>a]:hover:text-white [&>li>a]:transition-colors">
-                <li><a href="#services">Organic SEO Architecture</a></li>
-                <li><a href="#services">Editorial Web Design & CRO</a></li>
-                <li><a href="#services">Revenue & Sales Systems</a></li>
-                <li><a href="#services">Lifecycle Email Marketing</a></li>
-                <li><a href="#services">Incubator: Social Media Newbies</a></li>
-              </ul>
-            </div>
-
-            {/* Col 2: Studio & Framework */}
-            <div>
-              <h4 className="font-mono text-xs uppercase tracking-widest text-neutral-400 mb-6 font-medium">
-                Studio
-              </h4>
-              <ul className="space-y-3 font-mono text-xs tracking-wider text-neutral-400 [&>li>a]:hover:text-white [&>li>a]:transition-colors">
-                <li><a href="#why-us">Why Partner With Us</a></li>
-                <li><a href="#results">Case Studies & Metrics</a></li>
-                <li><a href="#reviews">Verified Client Reviews</a></li>
-                <li><a href="#roi-calculator">Revenue Simulator</a></li>
-                <li><a href="#faq">Operational FAQ</a></li>
-              </ul>
-            </div>
-
-            {/* Col 3: Portals & Access */}
-            <div>
-              <h4 className="font-mono text-xs uppercase tracking-widest text-neutral-400 mb-6 font-medium">
-                Access
-              </h4>
-              <ul className="space-y-3 font-mono text-xs tracking-wider text-neutral-400">
-                <li>
-                  <button
-                    onClick={() => {
-                      if (isAuthenticated && !isAdmin) {
-                        navigateTo('client_portal');
-                      } else {
-                        onOpenAuth('login', 'client');
-                      }
-                    }}
-                    className="hover:text-white transition-colors cursor-pointer text-left"
-                  >
-                    Client Campaign Portal
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => {
-                      if (isAuthenticated && isAdmin) {
-                        navigateTo('admin_dashboard');
-                      } else {
-                        onOpenAuth('login', 'admin');
-                      }
-                    }}
-                    className="hover:text-white transition-colors cursor-pointer text-left"
-                  >
-                    Executive Command Center
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => onOpenAuth('register', 'client')}
-                    className="hover:text-white transition-colors cursor-pointer text-left"
-                  >
-                    Register Account
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={onOpenAudit}
-                    className="hover:text-white transition-colors cursor-pointer text-left"
-                  >
-                    Free Growth Audit
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-            {/* Col 4: Leadership & Direct Contact */}
-            <div>
-              <h4 className="font-mono text-xs uppercase tracking-widest text-neutral-400 mb-6 font-medium">
-                Leadership
-              </h4>
-              <div className="space-y-2 font-mono text-xs text-neutral-400">
-                <p className="text-white">Nikhil — Founder</p>
-                <p className="text-white">Mokshith — Co-Founder</p>
-                <p className="text-white">Amaresh — Co-Founder</p>
-                <div className="pt-3 border-t border-neutral-800 space-y-1">
-                  <p>Inquiries: <a href="mailto:contact@nysaagency.com" className="text-white hover:underline">contact@nysaagency.com</a></p>
-                  <p>Instagram: <a href="https://www.instagram.com/nysax.agency?stkn=MXdycDVzN3lqc2tqZA==" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">@nysax.agency</a></p>
-                </div>
-              </div>
-            </div>
+          {/* Capabilities */}
+          <div className="lg:col-span-2">
+            <h4 className="font-mono text-xs text-olive-400 uppercase tracking-widest mb-5">
+              Disciplines
+            </h4>
+            <ul className="flex flex-col gap-3 font-mono text-xs text-silver-400">
+              <li><a href="#services" className="hover:text-white transition-colors">Strategy Advisory</a></li>
+              <li><a href="#services" className="hover:text-white transition-colors">UI/UX Architecture</a></li>
+              <li><a href="#services" className="hover:text-white transition-colors">Web Applications</a></li>
+              <li><a href="#services" className="hover:text-white transition-colors">Mobile Systems</a></li>
+              <li><a href="#services" className="hover:text-white transition-colors">AI Pipelines</a></li>
+            </ul>
           </div>
 
-          {/* Bottom Copyright & Disclaimer */}
-          <div className="pt-8 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-mono tracking-wider text-neutral-500 uppercase">
-            <p>© {currentYear} NYSA AGENCY. All rights reserved. Directed by Nikhil, Mokshith & Amaresh.</p>
-            <div className="flex gap-6">
-              <a href="#contact" className="hover:text-white transition-colors">Privacy</a>
-              <a href="#contact" className="hover:text-white transition-colors">Terms</a>
+          {/* Company & Leadership */}
+          <div className="lg:col-span-2">
+            <h4 className="font-mono text-xs text-olive-400 uppercase tracking-widest mb-5">
+              Leadership
+            </h4>
+            <ul className="flex flex-col gap-3 font-mono text-xs text-silver-400">
+              <li><span className="text-white font-semibold">Nikhil</span> (Founder)</li>
+              <li><span className="text-white font-semibold">Mokshith</span> (Co-Founder)</li>
+              <li><span className="text-white font-semibold">Amaresh</span> (Co-Founder)</li>
+              <li><a href="#team" className="text-olive-400 hover:underline pt-2 inline-block">Partner Profiles →</a></li>
+            </ul>
+          </div>
+
+          {/* Access & Portal */}
+          <div className="lg:col-span-3">
+            <h4 className="font-mono text-xs text-olive-400 uppercase tracking-widest mb-5">
+              Portal Access
+            </h4>
+            <ul className="flex flex-col gap-3 font-mono text-xs text-silver-400 mb-6">
+              <li>
+                <button
+                  onClick={() => navigateTo('client_portal')}
+                  className="hover:text-white transition-colors cursor-pointer text-left flex items-center gap-1.5"
+                >
+                  <span>Client Operations Portal</span>
+                  <ArrowUpRight size={12} className="text-olive-400" />
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    if (isAdmin) {
+                      navigateTo('admin_dashboard')
+                    } else {
+                      onOpenAuth('login', 'admin')
+                    }
+                  }}
+                  className="hover:text-white transition-colors cursor-pointer text-left flex items-center gap-1.5"
+                >
+                  <span>Leadership Administration Desk</span>
+                  <ArrowUpRight size={12} className="text-olive-400" />
+                </button>
+              </li>
+            </ul>
+
+            <div className="font-mono text-xs text-silver-500 pt-3 border-t border-white/5">
+              <div>INBOX: contact@nysaagency.com</div>
+              <div>LOCATION: Bangalore, India</div>
             </div>
+          </div>
+        </div>
+
+        {/* Bottom Attribution Bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-silver-500">
+          <div>
+            © {currentYear} NYSA AGENCY. ALL RIGHTS RESERVED.
+          </div>
+
+          <div className="flex items-center gap-4 text-silver-400">
+            <span>BLACK</span>
+            <span>•</span>
+            <span>SILVER</span>
+            <span>•</span>
+            <span className="text-olive-400">OLIVE</span>
+            <span>•</span>
+            <span>WHITE</span>
+          </div>
+
+          <div>
+            SERIOUS PARTNERSHIPS FOR AMBITIOUS FOUNDERS.
           </div>
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
