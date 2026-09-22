@@ -11,13 +11,17 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking }) => 
       name: 'Nikhil',
       role: 'Founder & Principal Architect',
       focus: 'Enterprise Systems, Creative Direction & Conversion Engineering',
-      bio: 'Steers overarching agency strategy and technical architecture, translating brand visions into scalable, high-conversion web ecosystems.'
+      bio: 'Steers overarching agency strategy and technical architecture, translating brand visions into scalable, high-conversion web ecosystems.',
+      image: '/assets/team/nikhil.jpg',
+      imagePosition: 'center 45%'
     },
     {
       name: 'Mokshith',
       role: 'Co-Founder & Growth Strategist',
       focus: 'Performance Acquisition & Brand Scale',
-      bio: 'Orchestrates full-funnel quantitative performance systems and client acquisition operations with relentless precision.'
+      bio: 'Orchestrates full-funnel quantitative performance systems and client acquisition operations with relentless precision.',
+      image: '/assets/team/mokshith.jpg',
+      imagePosition: 'center 70%'
     },
     {
       name: 'Amaresh',
@@ -97,6 +101,16 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenBooking }) => 
                     </span>
                     <span className="text-xs font-mono text-neutral-600">0{leadership.indexOf(leader) + 1}</span>
                   </div>
+                  {leader.image && (
+                    <div className="relative w-full h-48 mb-4 overflow-hidden border border-neutral-800 bg-black">
+                      <img
+                        src={leader.image}
+                        alt={leader.name}
+                        style={{ objectPosition: leader.imagePosition || 'center center' }}
+                        className="w-full h-full object-cover filter grayscale contrast-115 hover:grayscale-0 transition-all duration-500"
+                      />
+                    </div>
+                  )}
                   <h4 className="text-xl font-normal uppercase tracking-wide text-white">
                     {leader.name}
                   </h4>

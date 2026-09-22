@@ -110,6 +110,8 @@ export interface TeamMember {
   quote: string
   colors: [string, string]
   bio: string
+  image?: string
+  imagePosition?: string
 }
 
 export interface PricingPlan {
@@ -247,14 +249,18 @@ export const team: TeamMember[] = [
     role: 'Founder & Head of Marketing Strategy',
     quote: 'Marketing without creative leverage is expensive noise. We engineer campaigns that convert at scale.',
     colors: ['#708238', '#08080a'],
-    bio: 'Directs paid acquisition, commercial funnel architecture, and global growth positioning.'
+    bio: 'Directs paid acquisition, commercial funnel architecture, and global growth positioning.',
+    image: '/assets/team/nikhil.jpg',
+    imagePosition: 'center 45%'
   },
   {
     name: 'Mokshith',
     role: 'Co-Founder & Technical Architect',
     quote: 'High-speed code directly drives conversion rates. Sub-second performance equals profit.',
     colors: ['#c5c8d0', '#08080a'],
-    bio: 'Oversees tracking infrastructure, serverless pipelines, and high-concurrency web apps.'
+    bio: 'Oversees tracking infrastructure, serverless pipelines, and high-concurrency web apps.',
+    image: '/assets/team/mokshith.jpg',
+    imagePosition: 'center 70%'
   },
   {
     name: 'Amaresh',
