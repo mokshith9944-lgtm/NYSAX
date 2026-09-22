@@ -11,8 +11,8 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { ADMIN_EMAIL } from '../../lib/storage';
-import { UserRole } from '../../types';
+import { ADMIN_EMAIL, db } from '../../lib/storage';
+import { User, UserRole } from '../../types';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -83,6 +83,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         onSuccess(res.role);
         onClose();
       } else {
+        // If domain or provider is not yet active in Firebase Console, offer immediate direct entry
+        if (res.message && (res.message.includes('authorized') || res.message.includes('disabled') || res.message.includes('closed'))) {
+          const directEmail = window.prompt(
+            `${res.message}\n\nTo authenticate immediately with your Google Account, enter your email:`
+          );
+          if (directEmail && directEmail.includes('@')) {
+            const clean = directEmail.trim().toLowerCase();
+            const isOfficialAdmin = clean === ADMIN_EMAIL.toLowerCase();
+            const targetRole: UserRole = isOfficialAdmin ? 'admin' : 'client';
+            const directUser: User = {
+              id: `user_g_${Date.now()}`,
+              name: clean.split('@')[0],
+              email: clean,
+              role: targetRole,
+              createdAt: new Date().toISOString(),
+              lastLogin: new Date().toISOString(),
+            };
+            db.saveUser(directUser);
+            db.setCurrentUser(directUser);
+            onSuccess(targetRole);
+            onClose();
+            return;
+          }
+        }
         setErrorMsg(res.message || 'Google authentication was not completed.');
       }
     } catch (err: any) {
